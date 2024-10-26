@@ -1,0 +1,52 @@
+import { createContext, useEffect, useState } from "react";
+import { ReactNode } from "react";
+import { ApiState, User } from "../types/indext";
+import { AxiosError } from "axios";
+import { getMe } from "@/Apis/userApis";
+import toast from "react-hot-toast";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+
+const queryPromise = getMe();
+
+export interface IUserContext {
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  status: ApiState;
+}
+
+export const UserContext = createContext<IUserContext | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useLocalStorage<null | User>("login-user", null);
+  const [status, setState] = useState<ApiState>("pending");
+
+  useEffect(() => {
+    queryPromise
+      .then((user) => {
+        setUser(user);
+        setState("success");
+      })
+      .catch((e) => {
+        setState("error");
+        if (e instanceof AxiosError) {
+          if (e.response?.status === 401) {
+            return setUser(null);
+          }
+          toast.error("Failed to fetch login user", { id: "fsddsa" });
+        }
+      });
+  }, [setUser]);
+
+  // returning provider
+  return (
+    <UserContext.Provider
+      value={{
+        status,
+        user: user,
+        setUser,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
+}
