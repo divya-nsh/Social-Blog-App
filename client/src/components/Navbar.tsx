@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   Bookmarks,
   Gear,
   MagnifyingGlass,
@@ -53,7 +54,6 @@ export default function NavBar() {
 
   useEffect(() => {
     if (!location.pathname.startsWith("/search")) {
-      setSearching(false);
       setText("");
     }
   }, [location]);
@@ -64,198 +64,230 @@ export default function NavBar() {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  useEffect(() => {
-    if (isSearching) inputRef.current?.focus();
-  }, [isSearching]);
-
   useClickOutside(dropDownRef, () => setShowOption(false));
 
   return (
     <>
       <nav className="sticky left-0 right-0 top-0 z-50 flex h-[50px] w-full items-center gap-3 border-b bg-white px-3 dark:border-neutral-700 dark:bg-neutral-800 sm:px-4 md:px-10 lg:px-16">
-        <header>
-          <h1>
-            <NavLink
-              to="/"
-              className="flex items-center gap-2 font-bold text-gray-700 transition-all duration-300 active:text-indigo-500 dark:text-neutral-300"
-            >
-              <Feather size={30} weight="fill" color="#0095ff" className="" />
-              <span className={`text-xl ${isSearching && "hidden"} sm:block`}>
-                Story Nest
-              </span>
-            </NavLink>
-          </h1>
-        </header>
-
-        {/* For Mobile button to Expand Search */}
-        <button
-          hidden={isSearching}
-          title="Search"
-          type="submit"
-          onClick={() => setSearching(true)}
-          className="ml-auto rounded-full bg-slate-200 px-4 py-1.5 active:ring dark:bg-neutral-700 md:hidden"
-        >
-          <MagnifyingGlass
-            className="text-neutral-700 dark:text-neutral-300"
-            size={22}
-          />
-        </button>
-
-        <div
-          className={`mr-auto flex-1 py-1.5 md:ml-2 ${
-            !isSearching && "hidden"
-          } md:block`}
-        >
-          <form
-            id="search-bar"
-            onSubmit={handleSearch}
-            className="flex max-w-[300px] items-center gap-2 rounded-2xl border bg-slate-100 px-2 py-1 transition-all duration-300 focus-within:max-w-[500px] focus-within:ring-1 dark:bg-neutral-700"
-          >
-            <Link to="/test" title="Search">
-              <MagnifyingGlass color="gray" size={22} />
-            </Link>
-            <input
-              onBlur={() => {
-                if (!isSearchPage) {
-                  setSearching(false);
-                }
-              }}
-              ref={inputRef}
-              type="search"
-              placeholder="Search"
-              className={`w-full bg-transparent text-sm outline-none md:text-base`}
-              value={text}
-              onChange={(e) => {
-                setText(e.target.value);
-              }}
-            />
-          </form>
-        </div>
-
-        <div className="flex shrink-0 items-center gap-3 md:gap-6">
-          {user && !isSearching && (
-            <>
-              <Link
-                className="font-base hidden items-center gap-1 text-lg text-neutral-800 dark:text-neutral-300 sm:flex"
-                to="/compose"
-              >
-                <NotePencil size={30} />
-                <span className="hidden md:block">Write</span>
-              </Link>
-              <div ref={dropDownRef}>
-                <button
-                  className="flex items-center transition-all duration-200 active:scale-90"
-                  onClick={() => setShowOption(!showOption)}
+        {!isSearching ? (
+          <>
+            <header>
+              <h1>
+                <NavLink
+                  to="/"
+                  className="flex items-center gap-2 font-bold text-gray-700 transition-all duration-300 active:text-indigo-500 dark:text-neutral-300"
                 >
-                  <img
-                    alt="My profile image"
-                    src={user?.image.url}
-                    width={50}
-                    height={50}
-                    className="h-11 w-11 rounded-full border object-cover"
+                  <Feather
+                    size={30}
+                    weight="fill"
+                    color="#0095ff"
+                    className=""
                   />
-                </button>
-                {showOption && (
-                  <div
-                    className="absolute bottom-0 right-1 z-50 min-w-[220px] translate-y-[100%] gap-1 rounded-lg border bg-white py-1.5 text-sm text-neutral-800 shadow-md dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-100 dark:shadow-neutral-950"
-                    onClick={() => setShowOption(false)}
+                  <span className={`text-xl sm:block`}>Story Nest</span>
+                </NavLink>
+              </h1>
+            </header>
+
+            {/* For Mobile button to Expand Search */}
+            <button
+              title="Search"
+              type="submit"
+              onClick={() => setSearching(true)}
+              className="ml-auto rounded-full bg-slate-200 px-4 py-1.5 active:ring dark:bg-neutral-700 md:hidden"
+            >
+              <MagnifyingGlass
+                className="text-neutral-700 dark:text-neutral-300"
+                size={22}
+              />
+            </button>
+
+            <div className={`mr-auto hidden flex-1 py-1.5 sm:block`}>
+              <form
+                id="search-bar"
+                onSubmit={handleSearch}
+                className="flex w-full items-center gap-2 rounded-2xl border bg-slate-100 px-2 py-1 transition-all duration-300 focus-within:max-w-[500px] focus-within:ring-1 dark:bg-neutral-700 sm:max-w-[300px]"
+              >
+                <Link to="/test" title="Search">
+                  <MagnifyingGlass color="gray" size={22} />
+                </Link>
+                <input
+                  onBlur={() => {
+                    if (!isSearchPage) {
+                      setSearching(false);
+                    }
+                  }}
+                  ref={inputRef}
+                  type="search"
+                  placeholder="Search"
+                  className={`w-full bg-transparent text-sm outline-none md:text-base`}
+                  value={text}
+                  onChange={(e) => {
+                    setText(e.target.value);
+                  }}
+                />
+              </form>
+            </div>
+
+            <div className="flex shrink-0 items-center gap-3 md:gap-6">
+              {user && (
+                <>
+                  <Link
+                    className="font-base hidden items-center gap-1 text-lg text-neutral-800 dark:text-neutral-300 sm:flex"
+                    to="/compose"
                   >
-                    <div className="hover:bg-slate-200 dark:hover:bg-neutral-700">
-                      <Link
-                        to={"/profile/" + user?.username}
-                        className="group grid border-b px-2 py-2 pl-4"
+                    <NotePencil size={30} />
+                    <span className="hidden md:block">Write</span>
+                  </Link>
+                  <div ref={dropDownRef}>
+                    <button
+                      className="flex items-center transition-all duration-200 active:scale-90"
+                      onClick={() => setShowOption(!showOption)}
+                    >
+                      <img
+                        alt="My profile image"
+                        src={user?.image.url}
+                        width={50}
+                        height={50}
+                        className="h-11 w-11 rounded-full border object-cover"
+                      />
+                    </button>
+                    {showOption && (
+                      <div
+                        className="absolute bottom-0 right-1 z-50 min-w-[220px] translate-y-[100%] gap-1 rounded-lg border bg-white py-1.5 text-sm text-neutral-800 shadow-md dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-100 dark:shadow-neutral-950"
+                        onClick={() => setShowOption(false)}
                       >
-                        <span className="ellipsis text-base font-medium group-hover:text-blue-500 group-hover:underline">
-                          {user.fullName}
-                        </span>
-                        <span className="ellipsis text-[0.8rem] text-neutral-700 group-hover:text-blue-500 group-hover:underline dark:text-neutral-200">
-                          @{user.username}
-                        </span>
-                      </Link>
-                    </div>
-
-                    <div className="mt-2 w-full hover:bg-slate-200 active:opacity-50 dark:hover:bg-neutral-700">
-                      <Link
-                        to="/bookmarks"
-                        className="flex items-center gap-3 py-2 pl-4"
-                      >
-                        <Bookmarks size={22} /> Bookmarks
-                      </Link>
-                    </div>
-
-                    <div className="w-full hover:bg-slate-200 active:opacity-50 dark:hover:bg-neutral-700">
-                      <Link
-                        to="/compose"
-                        className="flex items-center gap-3 py-2 pl-4"
-                      >
-                        <NotePencil size={22} /> Create post
-                      </Link>
-                    </div>
-                    <div className="w-full hover:bg-slate-200 active:opacity-50 dark:hover:bg-neutral-700">
-                      <button
-                        className="flex w-full items-center gap-3 py-2 pl-4 text-start"
-                        onClick={() =>
-                          setTheme(theme === "dark" ? "light" : "dark")
-                        }
-                      >
-                        {theme === "dark" ? (
-                          <>
-                            <Sun size={22} />
-                            Light mode
-                          </>
-                        ) : (
-                          <>
-                            <Moon size={22} />
-                            Dark mode
-                          </>
-                        )}
-                      </button>
-                    </div>
-                    <div className="w-full hover:bg-slate-200 active:opacity-50 dark:hover:bg-neutral-700">
-                      <Link
-                        to="/account-settings"
-                        className="flex items-center gap-3 py-2 pl-4"
-                      >
-                        <Gear size={22} /> Settings
-                      </Link>
-                    </div>
-
-                    <div className="mt-2 w-full border-t hover:bg-slate-200 active:opacity-50 dark:hover:bg-neutral-700">
-                      <Logout>
-                        {(logout, isPending) => (
-                          <button
-                            disabled={isPending}
-                            onClick={logout}
-                            className="flex w-full items-center gap-3 py-2 pl-4 disabled:opacity-50"
+                        <div className="hover:bg-slate-200 dark:hover:bg-neutral-700">
+                          <Link
+                            to={"/profile/" + user?.username}
+                            className="group grid border-b px-2 py-2 pl-4"
                           >
-                            <SignOut size={22} /> Sign Out
+                            <span className="ellipsis text-base font-medium group-hover:text-blue-500 group-hover:underline">
+                              {user.fullName}
+                            </span>
+                            <span className="ellipsis text-[0.8rem] text-neutral-700 group-hover:text-blue-500 group-hover:underline dark:text-neutral-200">
+                              @{user.username}
+                            </span>
+                          </Link>
+                        </div>
+
+                        <div className="mt-2 w-full hover:bg-slate-200 active:opacity-50 dark:hover:bg-neutral-700">
+                          <Link
+                            to="/bookmarks"
+                            className="flex items-center gap-3 py-2 pl-4"
+                          >
+                            <Bookmarks size={22} /> Bookmarks
+                          </Link>
+                        </div>
+
+                        <div className="w-full hover:bg-slate-200 active:opacity-50 dark:hover:bg-neutral-700">
+                          <Link
+                            to="/compose"
+                            className="flex items-center gap-3 py-2 pl-4"
+                          >
+                            <NotePencil size={22} /> Create post
+                          </Link>
+                        </div>
+                        <div className="w-full hover:bg-slate-200 active:opacity-50 dark:hover:bg-neutral-700">
+                          <button
+                            className="flex w-full items-center gap-3 py-2 pl-4 text-start"
+                            onClick={() =>
+                              setTheme(theme === "dark" ? "light" : "dark")
+                            }
+                          >
+                            {theme === "dark" ? (
+                              <>
+                                <Sun size={22} />
+                                Light mode
+                              </>
+                            ) : (
+                              <>
+                                <Moon size={22} />
+                                Dark mode
+                              </>
+                            )}
                           </button>
-                        )}
-                      </Logout>
-                    </div>
+                        </div>
+                        <div className="w-full hover:bg-slate-200 active:opacity-50 dark:hover:bg-neutral-700">
+                          <Link
+                            to="/account-settings"
+                            className="flex items-center gap-3 py-2 pl-4"
+                          >
+                            <Gear size={22} /> Settings
+                          </Link>
+                        </div>
+
+                        <div className="mt-2 w-full border-t hover:bg-slate-200 active:opacity-50 dark:hover:bg-neutral-700">
+                          <Logout>
+                            {(logout, isPending) => (
+                              <button
+                                disabled={isPending}
+                                onClick={logout}
+                                className="flex w-full items-center gap-3 py-2 pl-4 disabled:opacity-50"
+                              >
+                                <SignOut size={22} /> Sign Out
+                              </button>
+                            )}
+                          </Logout>
+                        </div>
+                      </div>
+                    )}
                   </div>
+                </>
+              )}
+
+              {!user && (
+                <Link
+                  className="rounded-lg bg-gray-800 px-4 py-1 text-white hover:opacity-80"
+                  to="/login"
+                >
+                  Sign in
+                </Link>
+              )}
+              <div className="flex items-center">
+                {status === "pending" && (
+                  <SpinnerGap
+                    size={22}
+                    className="animate-spin text-neutral-800 dark:text-neutral-100"
+                  />
                 )}
               </div>
-            </>
-          )}
-
-          {!user && !isSearching && (
-            <Link
-              className="rounded-lg bg-gray-800 px-4 py-1 text-white hover:opacity-80"
-              to="/login"
+            </div>
+          </>
+        ) : (
+          <div className="flex w-full gap-3">
+            <button
+              onClick={() => setSearching(false)}
+              title="back"
+              className="text-neutral-800"
             >
-              Sign in
-            </Link>
-          )}
-          <div className="flex items-center">
-            {status === "pending" && (
-              <SpinnerGap
-                size={22}
-                className="animate-spin text-neutral-800 dark:text-neutral-100"
+              <ArrowLeft size={22} weight="bold" />
+            </button>
+            <form
+              onSubmit={handleSearch}
+              className="flex w-full items-center gap-2 rounded-2xl border bg-slate-100 px-2 py-1 transition-all duration-300 focus-within:max-w-[500px] focus-within:ring-1 dark:bg-neutral-700"
+            >
+              <Link to="/test" title="Search">
+                <MagnifyingGlass color="gray" size={22} />
+              </Link>
+              <input
+                autoFocus
+                onBlur={() => {
+                  if (!isSearchPage) {
+                    setSearching(false);
+                  }
+                }}
+                ref={inputRef}
+                type="search"
+                placeholder="Search"
+                className={`w-full bg-transparent text-sm outline-none md:text-base`}
+                value={text}
+                onChange={(e) => {
+                  setText(e.target.value);
+                }}
               />
-            )}
+            </form>
           </div>
-        </div>
+        )}
       </nav>
     </>
   );
