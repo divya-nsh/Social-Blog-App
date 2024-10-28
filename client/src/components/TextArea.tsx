@@ -50,7 +50,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, FormInputProps>(
         <textarea
           id={id || defaultID}
           className={twMerge(
-            "peer mt-1 flex w-full items-center rounded-md border bg-transparent px-3 py-2 text-sm outline-none transition-all duration-300",
+            "peer mt-1 flex w-full items-center rounded-md border bg-transparent px-3 py-2 text-sm outline-none transition-all duration-300 dark:border-neutral-600",
             error
               ? "border-red-600"
               : "border-neutral-300 focus:border-blue-600 dark:focus:ring-white",

@@ -27,7 +27,7 @@ export const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
         <input
           id={id || defaultID}
           className={twMerge(
-            "peer mt-0.5 flex w-full items-center rounded-md border border-neutral-300 bg-transparent px-3 py-1.5 opacity-95 outline-none transition-all duration-200 focus:opacity-100 dark:text-neutral-100",
+            "peer mt-0.5 flex w-full items-center rounded-md border border-neutral-300 bg-transparent px-3 py-1.5 opacity-95 outline-none transition-all duration-200 focus:opacity-100 dark:border-neutral-600 dark:text-neutral-100",
             className,
             error
               ? "border-red-600 dark:border-[#ff4f46]"
@@ -70,7 +70,7 @@ export function InputWithIcon({
       </label>
       <div
         className={twMerge(
-          "flex items-center gap-3 rounded-md border px-3 py-2 outline-none transition-all duration-100 focus-within:ring-1",
+          "flex items-center gap-3 rounded-md border px-3 py-2 outline-none transition-all duration-100 focus-within:ring-1 dark:border-neutral-600",
           className,
         )}
       >

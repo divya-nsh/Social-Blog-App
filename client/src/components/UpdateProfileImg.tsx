@@ -75,7 +75,7 @@ export default function UpdateProfileImg() {
           width={150}
           height={150}
           className={twMerge(
-            `peer h-[150px] w-[150px] cursor-pointer rounded-full border object-cover transition-all duration-300`,
+            `peer h-[150px] w-[150px] cursor-pointer rounded-full border object-cover transition-all duration-300 dark:border-neutral-700`,
             isPending ? "animate-pulse opacity-80" : "group-hover:opacity-80",
           )}
         />

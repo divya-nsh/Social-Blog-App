@@ -22,7 +22,7 @@
 .ql-container .ql-editor {
   @apply min-h-[300px] border-neutral-700 text-base;
 }
-
+/*
 .ql-toolbar {
   @apply bg-gray-100 dark:bg-neutral-200;
 }
@@ -41,10 +41,13 @@
 
 .ql-snow .ql-editor ol {
   @apply ml-0 mt-5 pl-0 text-lg;
-}
+} */
 
 body {
   @apply dark:border-neutral-700 dark:text-white;
+}
+* {
+  @apply dark:border-neutral-600;
 }
 
 @layer utilities {

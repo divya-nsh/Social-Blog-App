@@ -83,7 +83,9 @@ export default function NavBar() {
                     color="#0095ff"
                     className=""
                   />
-                  <span className={`text-xl sm:block`}>Story Nest</span>
+                  <span className={`text-lg sm:block sm:text-xl`}>
+                    Story Nest
+                  </span>
                 </NavLink>
               </h1>
             </header>
@@ -93,7 +95,7 @@ export default function NavBar() {
               title="Search"
               type="submit"
               onClick={() => setSearching(true)}
-              className="ml-auto rounded-full bg-slate-200 px-4 py-1.5 active:ring dark:bg-neutral-700 md:hidden"
+              className="ml-auto rounded-full bg-slate-200 px-3 py-1.5 active:ring dark:bg-neutral-700 sm:hidden"
             >
               <MagnifyingGlass
                 className="text-neutral-700 dark:text-neutral-300"
@@ -105,7 +107,7 @@ export default function NavBar() {
               <form
                 id="search-bar"
                 onSubmit={handleSearch}
-                className="flex w-full items-center gap-2 rounded-2xl border bg-slate-100 px-2 py-1 transition-all duration-300 focus-within:max-w-[500px] focus-within:ring-1 dark:bg-neutral-700 sm:max-w-[300px]"
+                className="flex w-full items-center gap-2 rounded-2xl border bg-slate-100 px-2 py-1 transition-all duration-300 focus-within:max-w-[500px] focus-within:ring-1 dark:border-neutral-800 dark:bg-neutral-700 sm:max-w-[300px]"
               >
                 <Link to="/test" title="Search">
                   <MagnifyingGlass color="gray" size={22} />
@@ -148,7 +150,7 @@ export default function NavBar() {
                         src={user?.image.url}
                         width={50}
                         height={50}
-                        className="h-11 w-11 rounded-full border object-cover"
+                        className="h-11 w-11 rounded-full border object-cover dark:border-neutral-700"
                       />
                     </button>
                     {showOption && (
@@ -156,10 +158,10 @@ export default function NavBar() {
                         className="absolute bottom-0 right-1 z-50 min-w-[220px] translate-y-[100%] gap-1 rounded-lg border bg-white py-1.5 text-sm text-neutral-800 shadow-md dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-100 dark:shadow-neutral-950"
                         onClick={() => setShowOption(false)}
                       >
-                        <div className="hover:bg-slate-200 dark:hover:bg-neutral-700">
+                        <div className="border-b hover:bg-slate-200 dark:border-neutral-600 dark:hover:bg-neutral-700">
                           <Link
                             to={"/profile/" + user?.username}
-                            className="group grid border-b px-2 py-2 pl-4"
+                            className="group grid px-2 py-2 pl-4"
                           >
                             <span className="ellipsis text-base font-medium group-hover:text-blue-500 group-hover:underline">
                               {user.fullName}
@@ -216,7 +218,7 @@ export default function NavBar() {
                           </Link>
                         </div>
 
-                        <div className="mt-2 w-full border-t hover:bg-slate-200 active:opacity-50 dark:hover:bg-neutral-700">
+                        <div className="mt-2 w-full border-t hover:bg-slate-200 active:opacity-50 dark:border-neutral-600 dark:hover:bg-neutral-700">
                           <Logout>
                             {(logout, isPending) => (
                               <button
@@ -236,12 +238,20 @@ export default function NavBar() {
               )}
 
               {!user && (
-                <Link
-                  className="rounded-lg bg-gray-800 px-4 py-1 text-white hover:opacity-80"
-                  to="/login"
-                >
-                  Sign in
-                </Link>
+                <>
+                  <Link
+                    className="m rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:opacity-80"
+                    to="/login"
+                  >
+                    Login in
+                  </Link>
+                  <Link
+                    className="hidden rounded-lg border border-blue-600 px-3 py-1 text-sm text-white hover:opacity-80 dark:border-blue-500 sm:block"
+                    to="/login"
+                  >
+                    Signup
+                  </Link>
+                </>
               )}
               <div className="flex items-center">
                 {status === "pending" && (
@@ -264,7 +274,7 @@ export default function NavBar() {
             </button>
             <form
               onSubmit={handleSearch}
-              className="flex w-full items-center gap-2 rounded-2xl border bg-slate-100 px-2 py-1 transition-all duration-300 focus-within:max-w-[500px] focus-within:ring-1 dark:bg-neutral-700"
+              className="flex w-full items-center gap-2 rounded-2xl border bg-slate-100 px-2 py-1 transition-all duration-300 focus-within:max-w-[500px] focus-within:ring-1 dark:border-neutral-800 dark:bg-neutral-700"
             >
               <Link to="/test" title="Search">
                 <MagnifyingGlass color="gray" size={22} />

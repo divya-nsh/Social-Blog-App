@@ -110,7 +110,7 @@ export default function AccountSettings() {
             enableCount
           />
 
-          <div className="my-1 border-b pb-1 font-medium text-neutral-800">
+          <div className="mt-2 border-b font-medium text-neutral-800 dark:border-neutral-600 dark:text-neutral-300">
             Links
           </div>
           <InputWithIcon

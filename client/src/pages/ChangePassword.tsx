@@ -29,7 +29,7 @@ export default function ChangePassword() {
     <main>
       <form
         onSubmit={handleSubmit}
-        className="relative mx-auto grid max-w-2xl animate-fadeIn gap-5 rounded-b-2xl border-b bg-white px-9 pb-5 shadow-sm dark:bg-neutral-800"
+        className="relative mx-auto grid max-w-2xl animate-fadeIn gap-5 rounded-b-2xl bg-white px-9 pb-5 shadow-sm dark:bg-neutral-800"
       >
         <h1 className="mt-4 text-lg text-neutral-800 dark:text-neutral-100">
           Update Your password
