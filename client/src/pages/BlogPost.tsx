@@ -93,7 +93,7 @@ export default function PostPage() {
         )}
       </div>
 
-      <h2 className="mb-0 mt-3 break-words px-2 text-start text-xl font-bold text-neutral-800 dark:text-white sm:px-4 sm:text-2xl md:text-3xl">
+      <h2 className="mb-0 mt-3 break-words px-4 text-start text-3xl font-bold text-neutral-800 dark:text-white">
         {post.title}
       </h2>
 
@@ -125,12 +125,12 @@ export default function PostPage() {
         />
       </div>
 
-      <div className="ql-snow mt-3 dark:text-neutral-100 md:px-2">
+      <div className="ql-snow mt-3 px-6 dark:text-neutral-100">
         <div
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(post?.content || ""),
           }}
-          className="ql-editor h-fit min-h-fit pb-3 pl-0 dark:text-neutral-100"
+          className="ql-editor h-fit min-h-fit pb-1 pl-0"
         ></div>
       </div>
 

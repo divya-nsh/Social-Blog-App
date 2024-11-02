@@ -180,12 +180,7 @@ function EditCreatePostInner() {
           onChange={(v) => {
             setFormData((p) => ({ ...p, content: v }));
           }}
-          modules={{
-            toolbar: toolbarOptions,
-            clipboard: {
-              matchVisual: false,
-            },
-          }}
+          modules={toolBarModules}
         />
 
         <TagsInput
@@ -220,15 +215,16 @@ function EditCreatePostInner() {
   );
 }
 
-const toolbarOptions = [
-  ["bold", "italic", "underline", "strike", { indent: "-1" }, { indent: "+1" }],
-  // toggled buttons
-  [{ header: 1 }], // custom button values
-  // [{ size: ["small", false, "large", "huge"] }],
-  [{ list: "ordered" }, { list: "bullet" }],
-  [{ header: [1, 2, 3, false] }],
-  // [{ font: [false] }],
-  [{ align: [] }],
-  ["link", "code-block", "blockquote"],
-  ["clean"], // remove formatting button
-];
+const toolBarModules = {
+  toolbar: [
+    ["bold", "italic", "underline", "strike"],
+    [{ header: [1, 2, 3, 4] }],
+    ["link", "code-block", "blockquote", "code"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    // [{ list: ["ordered" ,"bullet","check" ]},
+    ["clean"],
+  ],
+  clipboard: {
+    matchVisual: false,
+  },
+};

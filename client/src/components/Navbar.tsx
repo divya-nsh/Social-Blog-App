@@ -109,9 +109,10 @@ export default function NavBar() {
                 onSubmit={handleSearch}
                 className="flex w-full items-center gap-2 rounded-2xl border bg-slate-100 px-2 py-1 transition-all duration-300 focus-within:max-w-[500px] focus-within:ring-1 dark:border-neutral-800 dark:bg-neutral-700 sm:max-w-[300px]"
               >
-                <Link to="/test" title="Search">
+                <button title="search">
                   <MagnifyingGlass color="gray" size={22} />
-                </Link>
+                </button>
+
                 <input
                   onBlur={() => {
                     if (!isSearchPage) {
@@ -276,9 +277,9 @@ export default function NavBar() {
               onSubmit={handleSearch}
               className="flex w-full items-center gap-2 rounded-2xl border bg-slate-100 px-2 py-1 transition-all duration-300 focus-within:max-w-[500px] focus-within:ring-1 dark:border-neutral-800 dark:bg-neutral-700"
             >
-              <Link to="/test" title="Search">
+              <button title="Search">
                 <MagnifyingGlass color="gray" size={22} />
-              </Link>
+              </button>
               <input
                 autoFocus
                 onBlur={() => {

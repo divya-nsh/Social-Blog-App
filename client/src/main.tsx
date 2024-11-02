@@ -1,5 +1,5 @@
-import "./index.css";
 import "react-quill/dist/quill.snow.css";
+import "./index.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { AuthProvider } from "./context/userContex.tsx";

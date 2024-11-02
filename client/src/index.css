@@ -4,7 +4,7 @@
 
 * {
   font-family: "Roboto", sans-serif;
-  @apply antialiased;
+  @apply antialiased dark:border-neutral-600;
 }
 
 @layer components {
@@ -19,35 +19,63 @@
   }
 }
 
-.ql-container .ql-editor {
-  @apply min-h-[300px] border-neutral-700 text-base;
-}
-/*
 .ql-toolbar {
-  @apply bg-gray-100 dark:bg-neutral-200;
+  @apply sticky top-12 z-10 bg-slate-100 shadow-sm dark:bg-neutral-300 !important;
+  font-family: "Roboto", sans-serif !important;
+}
+
+.ql-editor {
+  min-height: 200px;
+  font-family: Arial, sans-serif;
+  @apply border border-transparent text-base text-neutral-900;
 }
 
 .ql-editor p {
-  @apply text-base tracking-wide;
+  @apply mt-[1rem] text-base first:mt-0 last:mb-1 !important;
 }
 
-.ql-snow .ql-editor ul {
-  @apply list-disc !important;
+.ql-editor h1,
+h2,
+h3,
+h4 {
+  @apply first:mt-1 !important;
 }
 
-.ql-snow .ql-editor li {
-  @apply ml-2 mt-3 pl-0 text-lg;
+.ql-editor h1 {
+  @apply mt-6 text-3xl !important;
 }
 
-.ql-snow .ql-editor ol {
-  @apply ml-0 mt-5 pl-0 text-lg;
-} */
+.ql-editor h2 {
+  @apply mt-5 text-2xl !important;
+}
+
+.ql-editor h3 {
+  @apply mt-4 text-xl !important;
+}
+
+.ql-editor h4 {
+  @apply mt-3 text-lg !important;
+}
+
+.ql-editor h1 + p {
+  @apply mt-1 !important;
+}
+.ql-editor h2 + p {
+  @apply mt-1 !important;
+}
+.ql-editor h3 + p {
+  @apply mt-0.5 !important;
+}
+.ql-editor h4 + p {
+  @apply mt-0.5 !important;
+}
+
+.ql-editor li {
+  @apply mt-4 pl-0 !important;
+}
 
 body {
   @apply dark:border-neutral-700 dark:text-white;
-}
-* {
-  @apply dark:border-neutral-600;
 }
 
 @layer utilities {
