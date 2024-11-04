@@ -247,7 +247,7 @@ export default function NavBar() {
                     Login in
                   </Link>
                   <Link
-                    className="hidden rounded-lg border border-blue-600 px-3 py-1 text-sm text-white hover:opacity-80 dark:border-blue-500 sm:block"
+                    className="hidden rounded-lg border border-blue-600 px-3 py-1 text-sm text-blue-600 hover:opacity-80 dark:border-blue-500 dark:text-white sm:block"
                     to="/login"
                   >
                     Signup
