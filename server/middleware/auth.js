@@ -1,28 +1,23 @@
 import { HttpError } from "../utils/HttpError.js";
 import mongoose from "mongoose";
-import {
-  createSession,
-  SESSION_COOKIE_NAME,
-  verifyAuthToken,
-} from "../utils/session.js";
-import ms from "ms";
+import { SESSION_COOKIE_NAME, verifyAuthToken } from "../utils/session.js";
 
 /**
  * @type {import("express").RequestHandler}
  */
 export async function authorizaiton(req, res, next) {
   try {
-    const token = req.cookies[SESSION_COOKIE_NAME];
+    let token = req.cookies[SESSION_COOKIE_NAME];
+    const authHeader = req.headers["authorization"];
+    if (authHeader && authHeader.split(" ")[1]) {
+      token = authHeader.split(" ")[1];
+    }
     if (!token) return next(new HttpError("Unauthorized", 401));
     const data = await verifyAuthToken(token);
     if (!data) return next(new HttpError("Unauthorized", 401));
     req.userId = new mongoose.Types.ObjectId(data.userId);
-    req.user = { _id: req.userId };
-    let ageLeft = data.expiredAt - Date.now();
-    if (ageLeft > 0 && ageLeft < ms("1d")) {
-      //Extend session
-      createSession(res, { _id: data.userId, pv: data.v }, "2d");
-    }
+    req.user = data.user;
+
     next();
   } catch (error) {
     next(error);
@@ -35,15 +30,15 @@ export async function authorizaiton(req, res, next) {
 export async function passUserId(req, res, next) {
   try {
     const token = req.cookies[SESSION_COOKIE_NAME];
+    const authHeader = req.headers["authorization"];
+    if (authHeader && authHeader.split(" ")[1]) {
+      token = authHeader.split(" ")[1];
+    }
     if (token) {
       const data = await verifyAuthToken(token);
       if (data) {
         req.userId = new mongoose.Types.ObjectId(data.userId);
-        req.user = { _id: req.userId };
-        let ageLeft = data.expiredAt - Date.now();
-        if (ageLeft > 0 && ageLeft < ms("1d")) {
-          createSession(res, { _id: data.userId, pv: data.v }, "2d");
-        }
+        req.user = data.user;
       }
     }
 
