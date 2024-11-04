@@ -27,7 +27,7 @@
 .ql-editor {
   min-height: 200px;
   font-family: Arial, sans-serif;
-  @apply border border-transparent text-base text-neutral-900;
+  @apply border border-transparent text-base text-neutral-900 dark:text-neutral-50;
 }
 
 .ql-editor p {
@@ -42,19 +42,19 @@ h4 {
 }
 
 .ql-editor h1 {
-  @apply mt-6 text-3xl !important;
+  @apply mt-7 text-3xl !important;
 }
 
 .ql-editor h2 {
-  @apply mt-5 text-2xl !important;
+  @apply mt-6 text-2xl !important;
 }
 
 .ql-editor h3 {
-  @apply mt-4 text-xl !important;
+  @apply mt-5 text-xl !important;
 }
 
 .ql-editor h4 {
-  @apply mt-3 text-lg !important;
+  @apply mt-4 text-lg !important;
 }
 
 .ql-editor h1 + p {
@@ -73,7 +73,13 @@ h4 {
 .ql-editor li {
   @apply mt-4 pl-0 !important;
 }
+.ql-editor code {
+  @apply dark:bg-neutral-700;
+}
 
+.ql-editor pre {
+  @apply border px-4 py-4 !important;
+}
 body {
   @apply dark:border-neutral-700 dark:text-white;
 }
