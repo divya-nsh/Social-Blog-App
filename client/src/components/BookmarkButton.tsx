@@ -6,7 +6,6 @@ import { addRemoveBookmark } from "../Apis/apis";
 import toast from "react-hot-toast";
 import { useBookmarkCtx } from "../context/BookmarkContext";
 import useRequireLogin from "@/hooks/useRequireLogin";
-import { AxiosError } from "axios";
 
 export interface BookmarkButtonAttr
   extends ButtonHTMLAttributes<HTMLButtonElement> {

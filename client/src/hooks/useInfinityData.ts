@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError } from "../types/indext";
+import { resolveWithRetries } from "@/lib/retry-resolve";
 
 type Options = {
   enabled?: boolean;
@@ -29,7 +30,10 @@ export function useIninfityData<T>(
   const fetchNextPage = useCallback(async () => {
     if (isFetching || !nextPageCursor.current) return;
     setStatus("fechingNext");
-    await fn(nextPageCursor.current)
+    resolveWithRetries(() => fn(nextPageCursor.current), {
+      delay: 500,
+      retries: 3,
+    })
       .then((data) => {
         setData((prev) => [...prev, ...data.results]);
         nextPageCursor.current = data.nextPageCursor;
@@ -45,7 +49,9 @@ export function useIninfityData<T>(
     async (signal?: AbortSignal) => {
       setData([]);
       setStatus("pending");
-      fn()
+      resolveWithRetries(fn, {
+        retries: (count) => count <= 3 && !signal?.aborted,
+      })
         .then((data) => {
           if (signal?.aborted) return;
           setData(data.results);

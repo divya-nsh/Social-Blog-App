@@ -5,8 +5,8 @@ import { AxiosError } from "axios";
 import { getMe } from "@/Apis/userApis";
 import toast from "react-hot-toast";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-
-const queryPromise = getMe();
+import { resolveWithRetries } from "@/lib/retry-resolve";
+import { retryHandler } from "@/lib/utils";
 
 export interface IUserContext {
   user: User | null;
@@ -21,7 +21,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [status, setState] = useState<ApiState>("pending");
 
   useEffect(() => {
-    queryPromise
+    resolveWithRetries(getMe, {
+      retries: retryHandler(4),
+    })
       .then((user) => {
         setUser(user);
         setState("success");
