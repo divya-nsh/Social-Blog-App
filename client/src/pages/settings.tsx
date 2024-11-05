@@ -177,9 +177,8 @@ export default function AccountSettings() {
             Change Password
           </Link>
           <Logout>
-            {(logout, loading) => (
+            {(logout) => (
               <button
-                disabled={loading}
                 onClick={logout}
                 type="button"
                 className="-ml-2 rounded-md px-2 py-2 text-sm text-blue-500 transition-all duration-200 hover:bg-slate-200 active:scale-90 dark:hover:bg-neutral-700"

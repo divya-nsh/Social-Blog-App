@@ -1,9 +1,6 @@
-import express from "express";
 import jwt from "jsonwebtoken";
 import { User } from "../models/userModel.js";
-import ms from "ms";
 
-export const SESSION_COOKIE_NAME = "access_token";
 const SESSION_AGE = process.env.SESSION_AGE || "30d";
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -24,6 +21,10 @@ export function generateAuthToken(user, age, scope = "") {
   return token;
 }
 
+export function createSessionToken(user) {
+  return generateAuthToken(user, SESSION_AGE);
+}
+
 export async function verifyAuthToken(token, scope = "") {
   const secret = `${JWT_SECRET}${scope || ""}`;
   try {
@@ -37,39 +38,4 @@ export async function verifyAuthToken(token, scope = "") {
     }
     throw error;
   }
-}
-
-/**
- * @param {express.Response} res
- * @param {{_id:string,pv:string}} user
- * @param {string} age
- * @returns {express.Response}
- */
-export function createSession(res, user, age = SESSION_AGE) {
-  const token = generateAuthToken(user, age);
-  return res.status(200).cookie(SESSION_COOKIE_NAME, token, {
-    maxAge: ms(age + ""),
-    secure: process.env.NODE_ENV === "production",
-    httpOnly: true,
-    priority: "high",
-    sameSite: "strict",
-  });
-}
-
-/**
- * @type {(req:express.Response)=>express.Response}
- */
-export function destroySession(res) {
-  return res.status(200).clearCookie(SESSION_COOKIE_NAME);
-}
-
-/**
- * @param {express.Request} req
- */
-export async function getSession(req) {
-  const token = req.cookies[SESSION_COOKIE_NAME];
-  if (!token) return null;
-  const session = await verifyAuthToken(token);
-  if (!session) return null;
-  return session;
 }

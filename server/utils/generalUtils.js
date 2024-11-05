@@ -1,4 +1,3 @@
-import { v2 as cloudinary } from "cloudinary";
 import { createAvatar } from "@dicebear/core";
 import { initials } from "@dicebear/collection";
 

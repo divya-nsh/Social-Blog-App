@@ -3,8 +3,7 @@ import { User } from "../models/userModel.js";
 import { throwError } from "../utils/HttpError.js";
 import bcrypt from "bcrypt";
 import {
-  createSession,
-  destroySession,
+  createSessionToken,
   generateAuthToken,
   verifyAuthToken,
 } from "../utils/session.js";
@@ -46,8 +45,9 @@ export const createUser = tryCatch(async (req, res) => {
     },
   });
 
-  createSession(res, user).json({
-    user: flatternUser(user, false, true),
+  res.status(201).json({
+    user: flatternUser(user, true),
+    authToken: createSessionToken(user),
   });
 });
 
@@ -61,8 +61,9 @@ export const handleLogin = tryCatch(async (req, res) => {
   const match = await bcrypt.compare(password, user.password);
   if (!match) throwError("Incorrect password", 400);
 
-  createSession(res, user).json({
-    user: flatternUser(user, false, true),
+  res.status(200).json({
+    user: flatternUser(user, true),
+    authToken: createSessionToken(user),
   });
 });
 
@@ -92,12 +93,9 @@ export const resetPassword = tryCatch(async (req, res) => {
     }
   );
   mailResetPasswordDone(user.email, user.username).catch(console.log);
-  createSession(res, user)
-    .status(200)
-    .json({
-      message: "OK",
-      results: flatternUser(user, false, true),
-    });
+  res.status(200).json({
+    message: "Password changed",
+  });
 });
 
 export const updatePassword = tryCatch(async (req, res) => {
@@ -109,15 +107,16 @@ export const updatePassword = tryCatch(async (req, res) => {
   if (!match) throwError("Incorrect Current password", 400);
   user.password = newPassword;
   await user.save();
-  createSession(res, user).status(200).json({ message: "Password changed" });
+  res.status(200).json({
+    authToken: createSessionToken(user),
+    message: "Password updated .New auth token issued",
+  });
 });
 
 //Get Login user
 export const getUser = tryCatch(async (req, res) => {
-  const user = await User.findById(req.userId);
-
   res.status(200).json({
-    results: flatternUser(user, false, true),
+    results: flatternUser(req.user, false, true),
   });
 });
 
@@ -188,8 +187,4 @@ export const updateProfile = tryCatch(async (req, res) => {
   }
 
   res.status(200).json({ results: flatternUser(user, false, true) });
-});
-
-export const logout = tryCatch(async (req, res) => {
-  destroySession(res).json({ message: "Logged out successfully" });
 });

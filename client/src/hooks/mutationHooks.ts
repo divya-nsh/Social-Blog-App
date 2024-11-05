@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createEditPost } from "@/Apis/posts-apis";
-import { logoutApi } from "@/Apis/userApis";
 import { wait } from "@/lib/utils";
 import { ApiError, EditCreatePostT, IPost } from "@/types/indext";
 import {
@@ -38,21 +37,4 @@ export const useSavePostMut = (
   });
 
   return { uploadProgress, ...mut };
-};
-
-export const useLogoutMut = () => {
-  const { mutate, isPending, error } = useMutation({
-    mutationFn: logoutApi,
-    onMutate() {
-      toast.loading("Signing out...", { id: "logout" });
-    },
-    onSuccess() {
-      localStorage.removeItem("login-user");
-      window.location.reload();
-    },
-    onError() {
-      toast.error("Failed to logout please try again", { id: "logout" });
-    },
-  });
-  return { logout: isPending ? () => {} : mutate, isPending, error };
 };

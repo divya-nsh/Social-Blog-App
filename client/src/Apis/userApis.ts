@@ -15,8 +15,7 @@ export async function resetPassword(data: {
   newPassword: string;
   token: string;
 }) {
-  const res = await makeRq.post("api/user/reset-password", data);
-  return res.data.results as User;
+  await makeRq.post("api/user/reset-password", data);
 }
 
 export async function getMe(cancelToken?: CancelToken) {
@@ -107,8 +106,4 @@ export async function getUserPosts(userId: string) {
     `api/posts/author/${userId}`,
   );
   return res.data;
-}
-
-export async function logoutApi() {
-  await makeRq.post("/api/user/logout");
 }

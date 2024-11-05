@@ -1,13 +1,13 @@
 import { HttpError } from "../utils/HttpError.js";
 import mongoose from "mongoose";
-import { SESSION_COOKIE_NAME, verifyAuthToken } from "../utils/session.js";
+import { verifyAuthToken } from "../utils/session.js";
 
 /**
  * @type {import("express").RequestHandler}
  */
 export async function authorizaiton(req, res, next) {
   try {
-    let token = req.cookies[SESSION_COOKIE_NAME];
+    let token = req.cookies["auth_token"];
     const authHeader = req.headers["authorization"];
     if (authHeader && authHeader.split(" ")[1]) {
       token = authHeader.split(" ")[1];
@@ -29,7 +29,7 @@ export async function authorizaiton(req, res, next) {
  */
 export async function passUserId(req, res, next) {
   try {
-    const token = req.cookies[SESSION_COOKIE_NAME];
+    let token = req.cookies["auth_token"];
     const authHeader = req.headers["authorization"];
     if (authHeader && authHeader.split(" ")[1]) {
       token = authHeader.split(" ")[1];

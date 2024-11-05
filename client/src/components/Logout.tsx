@@ -1,15 +1,18 @@
-import { useLogoutMut } from "@/hooks/mutationHooks";
 import { ReactNode, useCallback } from "react";
 
 type Props = {
-  children: (logout: () => void, isPending: boolean) => ReactNode;
+  children: (logout: () => void) => ReactNode;
 };
+
 export default function Logout({ children }: Props) {
-  const { logout, isPending } = useLogoutMut();
   const logoutWithConfirm = useCallback(() => {
     setTimeout(() => {
-      if (confirm("Are you sure you want to logout?")) logout();
+      if (confirm("Are you sure you want to logout?")) {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("login-user");
+        window.location.reload();
+      }
     }, 200);
-  }, [logout]);
-  return children(logoutWithConfirm, isPending);
+  }, []);
+  return children(logoutWithConfirm);
 }

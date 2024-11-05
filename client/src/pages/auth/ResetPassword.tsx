@@ -2,7 +2,6 @@ import { resetPassword } from "@/Apis/userApis";
 import Alert from "@/components/Alert";
 import Button from "@/components/ButtonV2";
 import { FormInput } from "@/components/Input";
-import { useUserContext } from "@/hooks/useUserCtx";
 import { ApiError } from "@/types/indext";
 import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
@@ -10,7 +9,6 @@ import toast from "react-hot-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 export default function ResetPassword() {
-  const { setUser } = useUserContext();
   const [params] = useSearchParams();
   const [newPassword, setNewPass] = useState("");
   const navigate = useNavigate();
@@ -22,10 +20,9 @@ export default function ResetPassword() {
     error: e,
   } = useMutation({
     mutationFn: resetPassword,
-    onSuccess(user) {
-      setUser(user);
+    onSuccess() {
       toast.success("Your password Updated");
-      navigate("/", { replace: true });
+      navigate("/login", { replace: true });
     },
     onError(e) {
       const error = e as ApiError;

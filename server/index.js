@@ -33,11 +33,11 @@ app.use(
     origin: process.env.CORS_ORIGIN.split(","),
     credentials: true,
     //[Access-Control-Allow-Methods]
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    // methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     //[Access-Control-Allow-Headers]
-    allowedHeaders: ["Content-Type"],
+    // allowedHeaders: ["Content-Type", "Authorization"],
     //[Access-Control-Max-Age] In seconds how long the response to the preflight request can be cached without sending another preflight request.
-    maxAge: 60 * 60, //In seconds 1 hour
+    maxAge: process.env.NODE_ENV === "production" ? 60 * 60 : 0, //In seconds 1 hour
     // exposedHeaders: ["Content-Length", "Content-Encoding"],
   })
 );
