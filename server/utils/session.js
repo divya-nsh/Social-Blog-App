@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/userModel.js";
+import { SESSION_AGE } from "./constant.js";
 
-const SESSION_AGE = process.env.SESSION_AGE || "30d";
 const JWT_SECRET = process.env.JWT_SECRET;
 
 /**
@@ -16,7 +16,7 @@ export function generateAuthToken(user, age, scope = "") {
   const secret = `${JWT_SECRET}${scope || ""}`;
   let payload = { userId: user._id, v: user.pv };
   const token = jwt.sign(payload, secret, {
-    expiresIn: age,
+    expiresIn: SESSION_AGE,
   });
   return token;
 }
