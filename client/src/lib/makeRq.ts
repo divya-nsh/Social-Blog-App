@@ -1,5 +1,5 @@
 import axios from "axios";
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/";
+export const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "/";
 
 const makeRq = axios.create({
   baseURL: `${API_BASE_URL}/`,
