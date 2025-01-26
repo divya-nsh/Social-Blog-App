@@ -41,6 +41,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.get("/api/health", (req, res) => res.sendStatus(200));
 app.use("/api/user", userRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/comments/v2", commentsRouterV2);
