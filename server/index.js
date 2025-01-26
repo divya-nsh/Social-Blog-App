@@ -53,7 +53,7 @@ app.use("*", (req, res) => {
 
 app.use(errorRequestHandler);
 
-let PORT = process.env.PORT_NO || 3000;
+let PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
