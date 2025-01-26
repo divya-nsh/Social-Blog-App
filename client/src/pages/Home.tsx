@@ -24,12 +24,11 @@ export default function Home() {
           {"#" + tag}
         </h2>
       )}
-
-      <div className="mt-4 cursor-default border-b border-neutral-300 px-4 py-1 font-medium tracking-wide text-neutral-900 dark:text-neutral-100 md:px-2">
-        <h2>Latest</h2>
-      </div>
-
       <section className="mt-5">
+        <div className="mb-3 px-2 text-lg text-neutral-800 dark:text-neutral-300">
+          Latest Posts
+        </div>
+
         <RenderPosts {...postsQ} />
       </section>
     </div>

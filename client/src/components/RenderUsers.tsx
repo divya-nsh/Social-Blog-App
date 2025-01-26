@@ -69,6 +69,7 @@ export default function RenderUsers({
               onClick={navigateToProfile(user.username)}
             >
               <img
+                loading="lazy"
                 alt={`${user.username} profile pic`}
                 src={user?.image.url || PLACEHOLDER_USER_IMG}
                 className="h-[60px] w-[60px] shrink-0 rounded-full border object-cover group-hover:text-blue-500"

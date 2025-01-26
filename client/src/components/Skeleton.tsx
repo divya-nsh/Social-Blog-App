@@ -1,4 +1,4 @@
-export function Skeleton({ mt = 10, contentSize = 20, maxWidth = "100%" }) {
+export function Skeleton({ mt = 10, contentSize = 50, maxWidth = "100%" }) {
   return (
     <div
       style={{

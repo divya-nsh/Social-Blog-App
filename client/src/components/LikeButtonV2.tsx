@@ -64,9 +64,8 @@ export default function LikeButton({
       )}
     >
       <Heart
-        className="flex-shrink-0"
+        className={`flex-shrink-0 ${isLiked ? "text-[#FF7377]" : "text-black dark:text-white"}`}
         size={size}
-        fill="#FF7377"
         weight={isLiked ? "fill" : "regular"}
       />
 

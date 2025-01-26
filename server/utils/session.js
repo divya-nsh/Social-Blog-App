@@ -16,7 +16,7 @@ export function generateAuthToken(user, age, scope = "") {
   const secret = `${JWT_SECRET}${scope || ""}`;
   let payload = { userId: user._id, v: user.pv };
   const token = jwt.sign(payload, secret, {
-    expiresIn: SESSION_AGE,
+    expiresIn: age,
   });
   return token;
 }

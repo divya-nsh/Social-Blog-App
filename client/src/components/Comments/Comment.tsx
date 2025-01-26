@@ -46,9 +46,10 @@ export function CommentSimple({
     >
       <div className="flex items-center gap-2">
         <img
+          loading="lazy"
           alt="User avatar"
           src={comment.author?.image?.url}
-          className="size-[30px] rounded-full border object-cover"
+          className="size-[35px] rounded-full border object-cover"
         />
         <div className="w-full overflow-hidden">
           <Link
@@ -56,15 +57,14 @@ export function CommentSimple({
             className={`} flex w-full`}
           >
             <span
-              className={`ellipsis text-sm text-neutral-700 hover:underline dark:text-neutral-50`}
+              className={`${comment.isCommentAuthorPostAuthor && "rounded-md bg-neutral-300 px-1 dark:bg-neutral-700"} ellipsis text-sm text-neutral-700 hover:underline dark:text-neutral-50`}
             >
-              {comment.isCommentAuthorPostAuthor && <>⭐</>} @
-              {comment.author.username}
+              @{comment.author.username}
             </span>
           </Link>
           <TimeAgo
             timestamp={comment.createdAt}
-            className="block dark:text-neutral-300"
+            className="block text-sm dark:text-neutral-300"
           />
         </div>
       </div>
@@ -91,7 +91,7 @@ export function CommentSimple({
             className="flex items-center gap-1 rounded-md px-2 text-red-500 hover:underline"
           >
             <span className="text-[0.8rem]">
-              {isPending ? "Deleting..." : "Delete"}
+              {isPending ? "Deleting..." : "DELETE"}
             </span>
           </button>
         )}

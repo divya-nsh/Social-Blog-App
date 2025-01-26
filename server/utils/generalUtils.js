@@ -94,7 +94,7 @@ export function generateAvatar(name = "") {
 
 export function isValidEmail(email) {
   const emailRegex =
-    /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i;
+    /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*\.)+[A-Z]{2,}$/i;
 
   if (email.length > 254) return false; // Check overall email length
 
@@ -124,6 +124,7 @@ export const startClock = () => {
     },
   };
 };
+
 export function formatSize(size) {
   const KB = 1024;
   const MB = KB * 1024;

@@ -24,13 +24,13 @@ export const createBookmark = tryCatch(async (req, res) => {
     { upsert: true }
   );
 
-  res.status(200).json({ message: "Bookmarked", success: true });
+  res.status(200).json({ message: "Post Bookmarked" });
 });
 
 export const removeBookmark = tryCatch(async (req, res) => {
   const { postId } = req.params;
   await Bookmark.deleteOne({ bookmarkedBy: req.userId, post: postId });
-  res.status(200).json({ message: "Bookmark removed", success: true });
+  res.status(200).json({ message: "Bookmark removed" });
 });
 
 export const getBookmarkPosts = tryCatch(async (req, res) => {

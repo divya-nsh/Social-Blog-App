@@ -7,6 +7,24 @@
   @apply antialiased dark:border-neutral-600;
 }
 
+:root {
+  --background: hsl(210, 40%, 96%);
+  --background: hsl(0, 0%, 94%);
+  --card: hsl(0, 0%, 100%);
+  --text: hsl(0, 0%, 5%);
+}
+
+.dark {
+  --background: hsl(0, 0%, 7%);
+  --card: hsl(0, 0%, 15%);
+  --text: hsl(0, 0%, 97%);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+}
+
 @layer components {
   .form-input {
     @apply w-full rounded-md border border-neutral-500 px-3 py-2 text-sm text-black outline-0 ring-blue-600 transition-all duration-200 focus:border-blue-600 focus:ring-1;
@@ -19,26 +37,23 @@
   }
 }
 
+.ql-container {
+  min-height: 200px;
+}
+
 .ql-toolbar {
   @apply sticky top-12 z-10 bg-slate-100 shadow-sm dark:bg-neutral-300 !important;
   font-family: "Roboto", sans-serif !important;
 }
 
 .ql-editor {
-  min-height: 200px;
+  /* min-height: 200px; */
   font-family: Arial, sans-serif;
   @apply border border-transparent text-base text-neutral-900 dark:text-neutral-50;
 }
 
 .ql-editor p {
   @apply mt-[1rem] text-base first:mt-0 last:mb-1 !important;
-}
-
-.ql-editor h1,
-h2,
-h3,
-h4 {
-  @apply first:mt-1 !important;
 }
 
 .ql-editor h1 {
@@ -55,6 +70,12 @@ h4 {
 
 .ql-editor h4 {
   @apply mt-4 text-lg !important;
+}
+.ql-editor h1,
+h2,
+h3,
+h4 {
+  @apply first:mt-1 !important;
 }
 
 .ql-editor h1 + p {
@@ -80,8 +101,9 @@ h4 {
 .ql-editor pre {
   @apply border px-4 py-4 !important;
 }
-body {
-  @apply dark:border-neutral-700 dark:text-white;
+
+.ql-editor blockquote {
+  @apply my-4 !important;
 }
 
 @layer utilities {
@@ -104,4 +126,8 @@ body {
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+}
+
+img {
+  @apply bg-neutral-200 dark:bg-neutral-600;
 }

@@ -1,6 +1,6 @@
 import { CancelToken } from "axios";
 import { EditCreatePostT, InfinityApiRes, IPost } from "../types/indext";
-import makeRq from "@/lib/makeRq";
+import { apiRq } from "@/lib/makeRq";
 
 interface options {
   tag?: string;
@@ -11,7 +11,7 @@ interface options {
 }
 
 export async function getPosts(params: options = {}, token?: CancelToken) {
-  return makeRq
+  return apiRq
     .get<InfinityApiRes<IPost>>("api/posts", {
       params,
       cancelToken: token,
@@ -26,7 +26,7 @@ export async function getPostsByUser({
   cursor?: string | null;
   userId: string;
 }) {
-  const res = await makeRq.get<InfinityApiRes<IPost>>(
+  const res = await apiRq.get<InfinityApiRes<IPost>>(
     `api/posts/author/${userId}`,
     { params: cursor ? { cursor } : {} },
   );
@@ -40,26 +40,26 @@ export async function searchPosts({
   text: string;
   cursor?: string | null;
 }) {
-  const res = await makeRq.get<InfinityApiRes<IPost>>(
+  const res = await apiRq.get<InfinityApiRes<IPost>>(
     `api/posts/search/${text}?cursor=${cursor}`,
   );
   return res.data;
 }
 
 export async function getPost(id: string) {
-  return makeRq
+  return apiRq
     .get<{ results: IPost }>(`api/posts/${id}`)
     .then((res) => res.data.results);
 }
 
 export async function getPostBySlug(slug: string) {
-  return makeRq
+  return apiRq
     .get<{ results: IPost }>(`api/posts/slug/${slug}`)
     .then((res) => res.data.results);
 }
 
 export async function deletePost(postId: string) {
-  await makeRq.delete(`api/posts/${postId}`);
+  await apiRq.delete(`api/posts/${postId}`);
 }
 
 export async function createEditPost(
@@ -79,7 +79,7 @@ export async function createEditPost(
     data = formData;
   }
 
-  return makeRq<{ post: IPost }>({
+  return apiRq<{ post: IPost }>({
     url: `api/posts/${body.editPostId || ""}`,
     data,
     method: body.editPostId ? "PUT" : "POST",

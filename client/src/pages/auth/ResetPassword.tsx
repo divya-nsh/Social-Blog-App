@@ -24,6 +24,7 @@ export default function ResetPassword() {
       toast.success("Your password Updated");
       navigate("/login", { replace: true });
     },
+
     onError(e) {
       const error = e as ApiError;
       if (error.status === 401) {

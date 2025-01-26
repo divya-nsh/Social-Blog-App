@@ -8,15 +8,9 @@ import postRouter from "./routes/posts-routes.js";
 import commentsRouterV2 from "./routes/comments-routes.js";
 import bookmarkRouter from "./routes/bookmark-routes.js";
 import LikeRouter from "./routes/like-routes.js";
-import morgan from "morgan";
 import { v2 as cloudinary } from "cloudinary";
 import { errorRequestHandler } from "./middleware/errorHandler.js";
 import { connectDB } from "./lib/connectDB.js";
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
-import compression from "compression";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -25,7 +19,6 @@ cloudinary.config({
 });
 
 const app = express();
-// app.disable('x-powered-by')
 
 app.use(
   cors({
@@ -42,14 +35,11 @@ app.use(
   })
 );
 
+// app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(compression());
-
-app.use(morgan("tiny"));
-
-app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/user", userRouter);
 app.use("/api/posts", postRouter);
@@ -63,7 +53,9 @@ app.use("*", (req, res) => {
 
 app.use(errorRequestHandler);
 
-app.listen(process.env.PORT_NO || 3000, async (err) => {
-  console.log(`Server is running on port ${3000}`);
+let PORT = process.env.PORT_NO || 3000;
+
+app.listen(PORT, async () => {
+  console.log(`Server is running on port ${PORT}`);
   await connectDB();
 });

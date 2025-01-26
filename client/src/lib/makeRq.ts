@@ -1,7 +1,7 @@
 import axios from "axios";
 export const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "/";
 
-const makeRq = axios.create({
+export const apiRq = axios.create({
   baseURL: `${API_BASE_URL}/`,
   headers: {
     ...(localStorage.getItem("authToken")
@@ -10,11 +10,11 @@ const makeRq = axios.create({
   },
 });
 
-makeRq.interceptors.response.use(
+apiRq.interceptors.response.use(
   (res) => {
     if (res.data?.authToken) {
       localStorage.setItem("authToken", res.data.authToken);
-      makeRq.defaults.headers.common["Authorization"] =
+      apiRq.defaults.headers.common["Authorization"] =
         `Bearer ${res.data.authToken}`;
     }
     return res;
@@ -22,7 +22,10 @@ makeRq.interceptors.response.use(
   (error) => {
     if (error instanceof axios.AxiosError) {
       if (error.response) {
-        error.message = error.response.data?.message || error.message;
+        error.message =
+          error.response.data?.message ||
+          error.response.data?.error ||
+          error.message;
       } else if (error.request) {
         error.message = "Unable to make request";
       }
@@ -30,5 +33,3 @@ makeRq.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-export default makeRq;

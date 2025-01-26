@@ -50,16 +50,16 @@ export default function CommentForm({
       <form
         onSubmit={handleSubmit}
         className={
-          "relative flex w-full items-center border bg-neutral-200 px-2 py-2 dark:bg-neutral-700"
+          "relative flex w-full items-center border-b border-t bg-neutral-200 px-2 py-2 dark:bg-neutral-700"
         }
       >
         {avatarUrl && (
           <img
             alt="User avatar"
             src={avatarUrl}
-            width={35}
-            height={50}
-            className="mr-1 rounded-full object-cover"
+            width={40}
+            height={40}
+            className="size-10 rounded-full border object-cover"
           />
         )}
 
@@ -69,7 +69,7 @@ export default function CommentForm({
             value={content}
             onChange={(e) => setContent(e.target.value)}
             disabled={isPending || disabled}
-            placeholder="What's in your head ?"
+            placeholder="Type your comment..."
             maxRows={5}
             required
             className="w-full bg-transparent text-sm outline-none dark:text-neutral-100 sm:text-base"

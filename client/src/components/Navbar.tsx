@@ -68,7 +68,7 @@ export default function NavBar() {
 
   return (
     <>
-      <nav className="sticky left-0 right-0 top-0 z-50 flex h-[50px] w-full items-center gap-3 border-b bg-white px-3 dark:border-neutral-700 dark:bg-neutral-800 sm:px-4 md:px-10 lg:px-16">
+      <nav className="sticky left-0 top-0 z-50 flex h-[50px] w-full items-center gap-3 border-b bg-card px-4 dark:border-neutral-700 lg:px-16">
         {!isSearching ? (
           <>
             <header>
@@ -240,19 +240,20 @@ export default function NavBar() {
               {!user && (
                 <>
                   <Link
-                    className="m rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:opacity-80"
+                    className="m rounded-lg bg-blue-600 px-4 py-1.5 text-white hover:opacity-80"
                     to="/login"
                   >
-                    Login in
+                    Login
                   </Link>
                   <Link
-                    className="hidden rounded-lg border border-blue-600 px-3 py-1 text-sm text-blue-600 hover:opacity-80 dark:border-blue-500 dark:text-white sm:block"
-                    to="/login"
+                    className="hidden rounded-lg border border-blue-600 px-4 py-1.5 text-blue-600 hover:opacity-80 dark:border-blue-500 dark:text-white sm:block"
+                    to="/signup"
                   >
                     Signup
                   </Link>
                 </>
               )}
+
               <div className="flex items-center">
                 {status === "pending" && (
                   <SpinnerGap

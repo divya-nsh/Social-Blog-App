@@ -1,12 +1,11 @@
 import { HttpError } from "../utils/HttpError.js";
 import mongoose from "mongoose";
-import express from "express";
 
 /**
- * @param {(req:express.Request & {userId?:string},res:express.Response)=>Promise<void>} controller
+ * @param {(req:import("express").express.Request & {userId?:string},res:import("express").Response)=>Promise<void>} controller
  * @returns {import("express").RequestHandler}
  */
-export default function tryCatch(controller = con) {
+export default function tryCatch(controller) {
   return async (req, res, next) => {
     try {
       Object.getOwnPropertyNames(req.params).forEach((param) => {

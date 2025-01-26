@@ -31,7 +31,7 @@ export const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
             className,
             error
               ? "border-red-600 dark:border-[#ff4f46]"
-              : "ring-blue-600 focus:border-blue-600",
+              : "focus:border-blue-600 dark:focus:border-blue-600",
           )}
           ref={ref}
           {...rest}

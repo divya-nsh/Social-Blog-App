@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import { MulterError } from "multer";
-import { removeImgInBackground } from "./cloudinary-service.js";
+import { removeImg } from "./cloudinary-service.js";
 
 /**
  * @param {import("cloudinary").UploadApiOptions} options
@@ -41,7 +41,7 @@ export function cloudinaryStorage(options) {
       file.stream.pipe(uploadStream);
     },
     _removeFile(req, file, callback) {
-      removeImgInBackground(file.filename, "MULTER_IMAGE_REMOVE", true);
+      removeImg(file.filename, true);
       callback();
     },
   };

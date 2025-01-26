@@ -1,6 +1,6 @@
 import { useUserContext } from "@/hooks/useUserCtx";
 import { useHandleChange } from "@/hooks/useHandleChange";
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { updateProfile, uploadProfileImg } from "@/Apis/userApis";
 import toast from "react-hot-toast";
@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 
 export default function EditProfileBeta() {
   const { user, setUser } = useUserContext();
-  const [progress, setProgress] = useState(0);
   if (!user) throw new Error("UnAuthorized");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -26,9 +25,7 @@ export default function EditProfileBeta() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: updateProfile,
-    onMutate() {
-      setProgress(0);
-    },
+
     onSuccess: (data) => {
       toast.success("Your Profile is updated");
       setUser(data);
@@ -41,7 +38,7 @@ export default function EditProfileBeta() {
 
   const changeImageMut = useMutation({
     mutationFn(file: File) {
-      return uploadProfileImg({ file, onUploadProgress: setProgress });
+      return uploadProfileImg({ file });
     },
     onSuccess(data) {
       setUser(data);
@@ -62,13 +59,16 @@ export default function EditProfileBeta() {
   if (!user) return;
 
   return (
-    <div className="m-auto mb-8 max-w-3xl pb-4 pt-4 dark:bg-neutral-800 md:px-5">
-      <h2 className="borde\r-b px-2 py-1 text-xl font-bold text-neutral-700">
+    <div className="m-auto mb-8 max-w-3xl pb-4 pt-4 md:px-5">
+      <h2 className="borde\r-b px-2 py-1 text-xl font-bold">
         Account Settings
       </h2>
 
-      <div className="mt-4 rounded-xl border bg-white p-6">
-        <div className="flex items-center gap-4 rounded-xl border bg-slate-100 px-3 py-2">
+      <div className="mt-4 rounded-xl border bg-card p-6 py-4">
+        <span className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+          Profile Pic
+        </span>
+        <div className="flex items-center gap-4 rounded-xl border bg-slate-100 px-3 py-2 dark:bg-transparent">
           <input
             hidden
             type="file"
@@ -103,16 +103,7 @@ export default function EditProfileBeta() {
 
           {changeImageMut.isPending ? (
             <div className="flex w-full items-center gap-2 text-green-600">
-              {progress < 100 ? (
-                <>
-                  <span hidden={progress >= 100} className="text-sm">
-                    {progress}%
-                  </span>
-                  <span className="text-sm">Uploading...</span>
-                </>
-              ) : (
-                <span className="text-sm">Upadating...</span>
-              )}
+              <span>Uploading...</span>
             </div>
           ) : (
             <div>
@@ -132,16 +123,18 @@ export default function EditProfileBeta() {
                   Remove
                 </button>
               </div>
-              <p className="text-[0.8rem] text-neutral-500">
-                JPG or PNG upto 5mb
+              <p className="text-[0.8rem] text-neutral-500 dark:text-neutral-200">
+                JPG or PNG upto 5mb (Square Img recomended)
               </p>
             </div>
           )}
         </div>
       </div>
       <form onSubmit={handeSubmit} className="">
-        <fieldset className="mt-4 grid gap-5 border bg-white p-6 md:rounded-xl">
-          <div className="text-lg font-medium text-neutral-800">Basic</div>
+        <fieldset className="mt-4 grid gap-5 border bg-card p-6 md:rounded-xl">
+          <div className="text-lg font-medium text-neutral-800 dark:text-neutral-200">
+            Basic
+          </div>
           <FormInput
             label="Full Name"
             name="fullName"
@@ -178,8 +171,8 @@ export default function EditProfileBeta() {
             enableCount
           />
         </fieldset>
-        <fieldset className="mt-6 rounded-xl border bg-white p-6">
-          <div className="text-lg font-medium text-neutral-700">
+        <fieldset className="mt-6 rounded-xl border bg-card p-6">
+          <div className="text-lg font-medium text-neutral-700 dark:text-neutral-200">
             Social Links
           </div>
           <small className="text-sm text-neutral-400">
@@ -210,6 +203,14 @@ export default function EditProfileBeta() {
               name="socialLinks.twitter"
             />
             <FormInput
+              label="Facebook Link"
+              placeholder="http://youtube.com/your_username"
+              type="url"
+              value={formData.socialLinks.facebook}
+              onChange={handleChange}
+              name="socialLinks.facebook"
+            />
+            <FormInput
               label="Youtube Link"
               placeholder="http://youtube.com/your_username"
               type="url"
@@ -223,7 +224,7 @@ export default function EditProfileBeta() {
         <button
           type="submit"
           disabled={isPending}
-          className="bottom-0 mt-6 flex w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-center text-white shadow-inner transition-all duration-300 enabled:hover:opacity-90 enabled:active:scale-90"
+          className="sticky bottom-0 mt-6 flex w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-center text-white shadow-inner transition-all duration-300 enabled:hover:opacity-90 enabled:active:scale-90"
         >
           {isPending ? (
             <SpinnerGap size={27} className="animate-spin" />
@@ -233,8 +234,8 @@ export default function EditProfileBeta() {
         </button>
       </form>
 
-      <div className="mt-6 rounded-xl border bg-white p-6">
-        <h3 className="mb-4 text-xl font-semibold text-neutral-800">
+      <div className="mt-6 rounded-xl border bg-card p-6">
+        <h3 className="mb-4 text-xl font-semibold text-neutral-800 dark:text-neutral-200">
           Account Security
         </h3>
         <div className="flex flex-col items-start gap-2">

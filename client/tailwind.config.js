@@ -4,7 +4,11 @@ export default {
   darkMode: "class",
   theme: {
     extend: {
-      colors: { title: "#282829" },
+      colors: {
+        title: "#282829",
+        background: "var(--background)",
+        card: "var(--card)",
+      },
       keyframes: {
         fade: {
           "0%": { opacity: "0" },

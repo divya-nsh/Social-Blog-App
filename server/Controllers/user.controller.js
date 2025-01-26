@@ -14,23 +14,25 @@ import {
   generateAvatar,
   isValidEmail,
 } from "../utils/generalUtils.js";
-import { removeImgInBackground } from "../lib/cloudinary-service.js";
+import { removeImg } from "../lib/cloudinary-service.js";
 import {
   mailResetPasswordDone,
   mailResetPasswordToken,
 } from "../lib/mailClient.js";
+import { OAuth2Client } from "google-auth-library";
 
-function flatternUser(user, removeEmail = false, isMe = true) {
+function flatternUser(user, removeEmail = false, isMe) {
   delete user.password;
   delete user.__v;
   delete user.pv;
   removeEmail && delete user.email;
-  return {
-    ...user.toObject(),
+  let res = {
+    ...(user.toObject ? user.toObject() : user),
     imageUrl: user.image.url,
     imageId: user.image.publicId,
-    isViewerProfile: isMe,
   };
+  if (isMe) res.isViewerProfile = true;
+  return res;
 }
 
 export const createUser = tryCatch(async (req, res) => {
@@ -57,7 +59,7 @@ export const handleLogin = tryCatch(async (req, res) => {
   if (!isValidEmail(email)) throwError("Invalid Email address", 400);
 
   const user = await User.findOne({ email });
-  if (!user) throwError("Email doesn't exist", 400);
+  if (!user) throwError("Account with given email doesn't exist", 400);
   const match = await bcrypt.compare(password, user.password);
   if (!match) throwError("Incorrect password", 400);
 
@@ -72,7 +74,7 @@ export const forgotPassword = tryCatch(async (req, res) => {
   if (!email) throwError("Email is required", 400);
   if (!isValidEmail(email)) throwError("Invalid Email");
   const user = await User.findOne({ email });
-  if (!user) throwError("Account with this email not exists", 400);
+  if (!user) throwError("Account with given email not exists", 400);
   let token = generateAuthToken(user, "15m", "reset-password");
   await mailResetPasswordToken(email, token, user.username).catch(console.log);
   res.status(200).json({ message: "Password reset token sent to your email" });
@@ -103,13 +105,14 @@ export const updatePassword = tryCatch(async (req, res) => {
   if (!password || !newPassword)
     throwError("password & newPassword both required", 400);
   const user = await User.findById(req.userId);
+  if (!user) throwError("User not found", 400);
   const match = await bcrypt.compare(password, user.password);
   if (!match) throwError("Incorrect Current password", 400);
   user.password = newPassword;
   await user.save();
   res.status(200).json({
     authToken: createSessionToken(user),
-    message: "Password updated .New auth token issued",
+    message: "Password updated. old session is invalid now",
   });
 });
 
@@ -148,18 +151,11 @@ export const searchUser = tryCatch(async (req, res) => {
   let users = await User.aggregate([
     { $match: matchQuery },
     ...paginateHelper.paginateStage(cursor),
-    { $unset: ["password", "email", "pv"] },
-    {
-      $set: {
-        isViewerProfile: { $eq: [req.userId, "$_id"] },
-        imageUrl: "$image.url",
-        imageId: "$image.publicId",
-      },
-    },
+    { $project: { fullName: 1, username: 1, email: 1, image: 1, _id: 1 } },
   ]);
 
   res.status(200).json({
-    results: users,
+    results: users.map((v) => flatternUser(v, true, req.userId === v._id)),
     nextPageCursor: paginateHelper.buildCursor(users),
   });
 });
@@ -183,8 +179,53 @@ export const updateProfile = tryCatch(async (req, res) => {
   await user.save();
 
   if (user.image?.publicId !== oldImgId) {
-    removeImgInBackground(oldImgId, "OLD_USER_IMAGE_REMOVE", true);
+    removeImg(oldImgId, "OLD_USER_IMAGE_REMOVE", true);
   }
 
   res.status(200).json({ results: flatternUser(user, false, true) });
 });
+
+const googleClient = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  "postmessage"
+);
+
+export const authWithGoogle = tryCatch(async (req, res) => {
+  let { idToken, code } = req.body;
+  if (code) {
+    const { tokens } = await googleClient.getToken(code);
+    idToken = tokens.id_token;
+  }
+
+  if (!idToken) throwError("IdToken Required", 400);
+
+  const token = await googleClient.verifyIdToken({
+    idToken,
+    audience: googleClient._clientId, // Specify the CLIENT_ID of the app that accesses the backend
+  });
+
+  const { email, name, email_verified, picture } = token.getPayload();
+  let user = await User.findOne({ email });
+
+  if (!user) {
+    let newUser = await User.create({
+      email,
+      fullName: name,
+      isVerified: email_verified,
+      password: Math.random().toString(36).slice(2),
+    });
+    if (picture) newUser.image = { url: picture };
+    await newUser.save();
+    user = newUser;
+  }
+
+  res.status(200).json({
+    user: flatternUser(user, true),
+    authToken: createSessionToken(user),
+  });
+});
+
+//https://lh3.googleusercontent.com/a/AEdFTp5bQzc9yB1ZM33KZzrbBgleVHKnzSPLBEsZ7GHZGg=s96-c
+//https://lh3.googleusercontent.com/a/ACg8ocLszMFY959CFh3BXInbMHqJtBgwZZrBx89aVg12u5d-P4ichD_H=s96-c
+//https://lh3.googleusercontent.com/a/ACg8ocLszMFY959CFh3BXInbMHqJtBgwZZrBx89aVg12u5d-P4ichD_H=s96-c

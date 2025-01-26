@@ -37,6 +37,7 @@ const postSchema = new mongoose.Schema(
       type: String,
       minlength: [50, "Content must have 50 letters"],
       required: true,
+      trim: true,
     },
     tags: {
       type: [String],
@@ -49,7 +50,7 @@ const postSchema = new mongoose.Schema(
             .map((tag) => tag.trim())
             .filter(Boolean);
         }
-        return tags.filter(Boolean);
+        return tags.filter(Boolean).map((tag) => tag.trim());
       },
     },
     coverImg: {

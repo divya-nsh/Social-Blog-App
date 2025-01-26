@@ -1,4 +1,4 @@
-import { memo, useCallback } from "react";
+import { useCallback } from "react";
 import CommentForm from "./CommentForm";
 import { useUserContext } from "@/hooks/useUserCtx";
 import { getComments } from "@/Apis/apis";
@@ -9,10 +9,15 @@ import { PLACEHOLDER_USER_IMG } from "@/lib/utils";
 
 interface CommentSecProps {
   postId: string;
+  commentsCount: number;
   setCount?: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const CommentSec = memo(({ postId, setCount }: CommentSecProps) => {
+export const CommentSec = ({
+  postId,
+  setCount,
+  commentsCount,
+}: CommentSecProps) => {
   const { user } = useUserContext();
   const {
     data: comments,
@@ -26,7 +31,10 @@ export const CommentSec = memo(({ postId, setCount }: CommentSecProps) => {
   );
 
   return (
-    <section className="mx-auto pb-3 pt-4">
+    <section className="mx-auto pb-3 pt-2" id="comments">
+      <h3 className="mb-1 px-2 text-2xl font-medium text-neutral-800 dark:text-neutral-200">
+        {commentsCount} Comments
+      </h3>
       <CommentForm
         setComments={setData}
         avatarUrl={user?.image.url || PLACEHOLDER_USER_IMG}
@@ -75,4 +83,4 @@ export const CommentSec = memo(({ postId, setCount }: CommentSecProps) => {
       </div>
     </section>
   );
-});
+};

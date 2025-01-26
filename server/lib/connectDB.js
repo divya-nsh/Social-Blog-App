@@ -1,40 +1,24 @@
 import mongoose from "mongoose";
-import { resolveWithRetries } from "../utils/generalUtils.js";
 
 export async function connectDB() {
-  if (mongoose.connection.readyState === 1) return;
-  let start = performance.now();
+  const MONGODB_URL = process.env.MONGODB_URL;
+  if (!MONGODB_URL) {
+    throw new Error("MONGODB_URL is not parsed as env");
+  }
   try {
-    console.log("connecting to DB...");
-    await resolveWithRetries(
-      () => mongoose.connect(process.env.MONOGDB_URL),
-      {
-        retries: 8,
-        backOffFactor: 2,
-        delay: 1000,
-        onFailed(e, r) {
-          console.log("Failed to connect to DB", e.message);
-          console.log(`Retrying... ${r}/8`);
-        },
-      }
-      //
-      //0:1s 1:2s 2:4s 3:8s 4:16s 6:32s 7:64s 8:128s
-    );
+    const now = performance.now();
+    console.log("conecting to db.....");
+    await mongoose.connect(MONGODB_URL);
     console.log(
-      "🍀 Succesfully connected to DB in",
-      Math.floor(performance.now() - start) + "ms"
+      "🎉Connected to DB in",
+      (performance.now() - now).toFixed(0) + "ms"
     );
-  } catch (err) {
-    console.log("----Error while connecting to Database----");
-    console.log(err.message);
+  } catch (error) {
+    console.log("Failed to connect to DB:");
+    console.log(error);
   }
 }
 
-mongoose.connection.on("disconnected", async () => {
-  console.log("🔌 Database connection lost. Attempting to reconnect...");
-  // connectDB();
-});
-
-mongoose.connection.on("error", (err) => {
-  console.log("��� Database error");
+mongoose.connection.on("disconnected", () => {
+  console.log("🔌 Database connection lost.");
 });

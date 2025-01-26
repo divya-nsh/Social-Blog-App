@@ -34,12 +34,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (e.response?.status === 401) {
             return setUser(null);
           }
-          toast.error("Failed to fetch login user", { id: "fsddsa" });
+          toast.error("Failed to fetch login detail", { id: "fsddsa" });
         }
       });
   }, [setUser]);
 
-  // returning provider
   return (
     <UserContext.Provider
       value={{
@@ -52,3 +51,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     </UserContext.Provider>
   );
 }
+
+// const OneTapLogin = () => {
+//   useGoogleOneTapLogin({
+//     onSuccess: async (res) => {
+//       await apiRq.post(`api/user/google-login`, {
+//         idToken: res.credential,
+//       });
+//       toast.loading("Logging in...");
+//       window.location.reload();
+//     },
+//   });
+//   return <></>;
+// };

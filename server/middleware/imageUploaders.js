@@ -26,7 +26,7 @@ export const postImgUploader = multer({
     },
     resource_type: "image",
     folder: "post-image",
-    tags: ["cover_img", "thumbnail", "post-image"],
+    tags: ["cover_img", "thumbnail"],
   }),
   limits: { fileSize: 1024 * 1024 * 5 },
 });

@@ -33,7 +33,7 @@ function ForgotPassword() {
 
           {isSuccess && (
             <div
-              className="flex animate-fadeIn-0.3 rounded-lg border border-green-500 p-4 text-sm text-green-500"
+              className="flex animate-fadeIn-0.3 rounded-lg border border-green-500 p-4 px-2 text-sm text-green-500"
               role="alert"
             >
               <span className="mr-2">
@@ -42,7 +42,8 @@ function ForgotPassword() {
               <div className="font-medium">
                 <p>
                   We&apos;ve sent you an email. Please check your inbox and
-                  follow the instructions to get back your account.
+                  follow the instructions to get back your account. check spam
+                  box in case you don't see the email.
                 </p>
               </div>
             </div>
@@ -58,7 +59,9 @@ function ForgotPassword() {
             autoComplete="email"
           />
 
-          <Button loading={isPending}>Send Email</Button>
+          <Button type="submit" loading={isPending}>
+            Send Email
+          </Button>
         </form>
         <Link
           to="/login"

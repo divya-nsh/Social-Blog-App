@@ -26,7 +26,7 @@ import ForgotPassword from "./pages/auth/ForgotPassword.tsx";
 import ResetPassword from "./pages/auth/ResetPassword.tsx";
 import { retryHandler } from "./lib/utils.tsx";
 import { ErrorBoundary } from "./components/ErrorBoundary.tsx";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -91,23 +91,25 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-        <Toaster
-          toastOptions={{
-            error: {
-              duration: 5000,
-            },
-            className: "dark:bg-black dark:text-white",
-            style: {
-              padding: "3px 10px",
-            },
-          }}
-          containerStyle={{
-            marginTop: "40px",
-          }}
-        />
-      </AuthProvider>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <AuthProvider>
+          <RouterProvider router={router} />
+          <Toaster
+            toastOptions={{
+              error: {
+                duration: 5000,
+              },
+              className: "dark:bg-black dark:text-white",
+              style: {
+                padding: "3px 10px",
+              },
+            }}
+            containerStyle={{
+              marginTop: "40px",
+            }}
+          />
+        </AuthProvider>
+      </GoogleOAuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </React.StrictMode>,

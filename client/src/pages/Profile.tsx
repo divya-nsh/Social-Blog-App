@@ -105,7 +105,7 @@ function InnerProfile({ username }: { username: string }) {
 
         <div className="px-3 pb-1 sm:px-6">
           {user.bio && (
-            <p className="break-words pb-2 text-sm text-neutral-900 dark:text-neutral-200">
+            <p className="break-words pb-2 text-neutral-900 dark:text-neutral-200">
               {user.bio}
             </p>
           )}

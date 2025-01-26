@@ -1,6 +1,6 @@
 import { CancelToken } from "axios";
 import { BookmarkedPost, IComment, InfinityApiRes } from "../types/indext";
-import makeRq from "@/lib/makeRq";
+import { apiRq } from "@/lib/makeRq";
 
 //---------------------------Like Api------------------------------------------//
 export async function likeDislikeApi(
@@ -9,26 +9,23 @@ export async function likeDislikeApi(
   action: "like" | "dislike",
 ) {
   const method = { like: "post", dislike: "delete" };
-  await makeRq(`api/like/${type}/${docId}`, { method: method[action] });
+  await apiRq(`api/like/${type}/${docId}`, { method: method[action] });
 }
 
 //--------------------------Bookmark Api--------------------------------------------//
 
 export async function addRemoveBookmark(postId: string, add: boolean) {
-  await makeRq(`api/bookmarks/${postId}`, { method: add ? "POST" : "DELETE" });
+  await apiRq(`api/bookmarks/${postId}`, { method: add ? "POST" : "DELETE" });
 }
 
 export async function getBookmarks(
   cursor?: string | null,
   token?: CancelToken,
 ) {
-  const res = await makeRq.get<InfinityApiRes<BookmarkedPost>>(
-    "api/bookmarks",
-    {
-      params: cursor ? { cursor } : {},
-      cancelToken: token,
-    },
-  );
+  const res = await apiRq.get<InfinityApiRes<BookmarkedPost>>("api/bookmarks", {
+    params: cursor ? { cursor } : {},
+    cancelToken: token,
+  });
   return res.data;
 }
 
@@ -43,7 +40,7 @@ export async function getComments({
   cursor?: string | null;
   cancelToken?: CancelToken;
 }) {
-  const res = await makeRq.get<{ results: IComment[]; nextPageCursor: string }>(
+  const res = await apiRq.get<{ results: IComment[]; nextPageCursor: string }>(
     `api/comments/v2/${postId}`,
     { params: { cursor }, cancelToken },
   );
@@ -57,10 +54,10 @@ export async function createComment({
   postId: string;
   content: string;
 }) {
-  const res = await makeRq.post(`api/comments/v2/${postId}`, { content });
+  const res = await apiRq.post(`api/comments/v2/${postId}`, { content });
   return res.data.results as IComment;
 }
 
 export async function deleteComment(commentId: string) {
-  await makeRq.delete(`api/comments/v2/${commentId}`);
+  await apiRq.delete(`api/comments/v2/${commentId}`);
 }

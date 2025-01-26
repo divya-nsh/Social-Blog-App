@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import Alert from "@/components/Alert";
 import Button from "@/components/ButtonV2";
 import { FormInput } from "@/components/Input";
+import GoogleLoginbtn from "./GoogleLoginbtn";
 
 const intialValue = {
   fullName: "",
@@ -89,7 +90,7 @@ export const Signup = () => {
           />
 
           <FormInput
-            label="Password"
+            label="Confirm Password"
             type="password"
             onChange={handleChange("password")}
             required
@@ -103,13 +104,11 @@ export const Signup = () => {
             Signup
           </Button>
         </form>
+        <GoogleLoginbtn />
 
         <div className="mt-4 text-center text-sm text-neutral-200">
           Aldready have an account?
-          <Link
-            to="/login"
-            className="ml-2 text-base text-blue-500 hover:underline"
-          >
+          <Link to="/login" className="ml-2 text-base underline">
             Login
           </Link>
         </div>

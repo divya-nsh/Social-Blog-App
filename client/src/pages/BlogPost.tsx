@@ -9,17 +9,19 @@ import { IPost } from "@/types/indext";
 import { AxiosError } from "axios";
 import { CommentSec } from "@/components/Comments/CommentSec";
 import BookmarkButton from "@/components/BookmarkButton";
-import { ChatDots, Link as LinkIcon } from "@phosphor-icons/react";
+import { Share } from "@phosphor-icons/react";
 import DOMPurify from "dompurify";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
 import { useScrollToTop } from "@/hooks/useScroll";
 import FetchFail from "@/components/FetchFail";
 import Button from "@/components/ButtonV2";
+import { useUserContext } from "@/hooks/useUserCtx";
 
 export default function PostPage() {
   const navigate = useNavigate();
   const { postId } = useParams();
+  const { user: loginUser } = useUserContext();
   if (!postId) throw new Error("postId params is not specify in url");
   const [commentsCount, setCommCount] = useState(0);
 
@@ -40,6 +42,32 @@ export default function PostPage() {
 
   useScrollToTop();
 
+  function sharePost() {
+    if (!post) return;
+    const shareData = {
+      title: "Story Nest",
+      text: post.title,
+      url: window.location.href,
+    };
+
+    const copyToClipboard = () => {
+      navigator.clipboard
+        .writeText(shareData.url)
+        .then(() => toast.success("Link copied to clipboard!"))
+        .catch(() =>
+          toast.error(
+            "Failed to copy to clipboard,please copy the URL manually.",
+          ),
+        );
+    };
+
+    if (navigator.canShare && navigator.canShare(shareData)) {
+      navigator.share(shareData);
+    } else {
+      copyToClipboard();
+    }
+  }
+
   if (error) {
     if (error?.response?.status === 404) return <NotFoundPage />;
     return <FetchFail target="posts" />;
@@ -50,7 +78,7 @@ export default function PostPage() {
   }
 
   return (
-    <main className="mx-auto mb-6 mt-3 max-w-3xl rounded-lg bg-white pb-3 shadow-sm dark:bg-neutral-800">
+    <main className="mx-auto mb-6 mt-3 max-w-3xl rounded-lg bg-card pb-3 shadow-sm">
       {/* Author Info */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b px-2 py-2 sm:px-4">
         <Link
@@ -60,40 +88,44 @@ export default function PostPage() {
           <div className="flex w-full cursor-pointer items-center gap-3 sm:gap-4">
             <img
               alt="Author avatar"
+              width={50}
+              height={50}
               src={post.author.image.url}
               className="size-10 flex-shrink-0 rounded-full border object-cover"
             />
-            <div className="text-md overflow-hidden text-neutral-700 dark:text-neutral-100">
+            <div className="overflow-hidden text-neutral-700 dark:text-neutral-100">
               <p className="ellipsis font-bold tracking-wider hover:underline">
                 {post.author.fullName}
               </p>
-              <p className="ellipsis text-[12px] tracking-wider opacity-90 hover:underline">
+              <p className="ellipsis text-sm tracking-wider opacity-90 hover:underline">
                 @{post.author.username}
               </p>
             </div>
           </div>
         </Link>
-        {post.isViewerAuthor && <EditDeletePost postId={post._id} />}
+        {post.author._id === loginUser?._id && (
+          <EditDeletePost postId={post._id} />
+        )}
       </div>
 
-      <div className="flex cursor-default justify-between gap-2 px-2 text-gray-500 sm:px-4">
+      <div className="mt-1 flex cursor-default justify-between gap-2 px-2 text-gray-500 sm:px-4">
         <small
           title={format(new Date(), "PPPP 'at' pp")}
           className="dark:text-neutral-200"
         >
-          Published: {format(new Date(post.createdAt), "d MMM yyyy")}
+          Published on {format(new Date(post.createdAt), "d MMM yyyy")}
         </small>
         {new Date(post.updatedAt) > new Date(post.createdAt) && (
           <small
             title={format(new Date(), "PPPP 'at' pp")}
             className="dark:text-neutral-200"
           >
-            Edited: {format(new Date(post.createdAt), "d MMM yyyy")}
+            Edited on {format(new Date(post.createdAt), "d MMM yyyy")}
           </small>
         )}
       </div>
 
-      <h2 className="mb-0 mt-3 break-words px-4 text-start text-3xl font-bold text-neutral-800 dark:text-white">
+      <h2 className="mb-0 mt-2 break-words px-4 text-start text-3xl font-bold text-neutral-800 dark:text-neutral-50 md:text-4xl">
         {post.title}
       </h2>
 
@@ -112,18 +144,19 @@ export default function PostPage() {
         </div>
       )}
 
-      <div className="px-2 sm:px-4">
-        <img
-          alt="Post CoverImage"
-          hidden={!post?.coverImgUrl}
-          src={post.coverImgUrl}
-          style={{
-            aspectRatio: "16/9",
-          }}
-          className="mt-5 w-full rounded-md object-cover"
-          loading="eager"
-        />
-      </div>
+      {post.coverImgUrl && (
+        <div className="px-2 sm:px-4">
+          <img
+            alt="Post CoverImage"
+            src={post.coverImgUrl}
+            style={{
+              aspectRatio: "16/9",
+            }}
+            className="mt-5 w-full rounded-md object-cover"
+            loading="eager"
+          />
+        </div>
+      )}
 
       <div className="ql-snow mt-3 px-6 dark:text-neutral-100">
         <div
@@ -135,47 +168,47 @@ export default function PostPage() {
       </div>
 
       {/* Interactions */}
-      <section className="-ml-2 flex flex-wrap px-2 pb-2 pt-5 sm:px-4">
+      <section className="mt-1 flex flex-wrap border-t px-2 py-2 sm:px-4">
         <LikeButton
           commentOrPostId={postId}
           target="post"
           isUserLiked={post.isUserLiked}
+          size={25}
           likesCount={post.likesCount}
         />
 
         <BookmarkButton
           className="active:scale-95"
-          size={23}
+          size={25}
           postId={postId}
           defaultState={post.isBookmarked}
         />
 
         <button
-          onClick={() => {
-            const link = window.location.href;
-            navigator.clipboard
-              .writeText(link)
-              .then(() => {
-                alert("Link copied to clipboard!");
-              })
-              .catch((err) => {
-                console.error("Failed to copy: ", err);
-              });
-          }}
-          title="Copy Post URL"
+          aria-label={`Share post ${post.title}`}
+          onClick={sharePost}
+          title={`Share post - ${post.title}`}
           className="flex items-center justify-center gap-1 rounded-full px-3 py-1 text-neutral-900 transition-all duration-300 hover:bg-slate-100 dark:text-neutral-100 dark:hover:bg-neutral-900"
         >
-          <LinkIcon size={23} />
+          <Share size={25} />
         </button>
 
-        <div className="ml-auto flex items-center gap-1 rounded-full border bg-slate-100 px-2 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-200">
+        {/* <a
+          href="#comments"
+          title={`${commentsCount} comments`}
+          className="flex items-center gap-1 rounded-full border bg-slate-100 px-2 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-200"
+        >
           <ChatDots size={25} />
           <span>{commentsCount}</span>
-        </div>
+        </a> */}
       </section>
 
       {/* Comment section */}
-      <CommentSec postId={post._id} setCount={setCommCount} />
+      <CommentSec
+        commentsCount={commentsCount}
+        postId={post._id}
+        setCount={setCommCount}
+      />
     </main>
   );
 }
@@ -204,13 +237,13 @@ function EditDeletePost({ postId }: { postId: string }) {
         <>
           <Link
             to={`/post/${postId}/edit`}
-            className="flex items-center rounded-md bg-blue-600 px-3 py-1 text-sm text-white"
+            className="flex items-center rounded-md bg-blue-600 px-4 py-1 text-sm text-white"
           >
             Edit
           </Link>
           <Button
             variants="danger"
-            className="px-3 py-1 text-sm"
+            className="px-4 py-1 text-sm"
             onClick={() => {
               const isConfirm = confirm("Are you sure to delete this post ?");
               isConfirm && mutate(postId);

@@ -32,7 +32,7 @@ export function Postv2({
   return (
     <article
       className={twMerge(
-        "flex w-full flex-col justify-between gap-4 border bg-white px-4 py-4 dark:border-0 dark:bg-neutral-800 sm:flex-row sm:items-center sm:gap-3 lg:rounded-lg",
+        "flex w-full flex-col justify-between gap-4 border bg-card px-4 py-4 dark:border-0 sm:flex-row sm:items-center sm:gap-3 lg:rounded-lg",
         className,
       )}
     >
@@ -42,7 +42,10 @@ export function Postv2({
           <img
             alt="User Avatar"
             onClick={navigateToProfile}
+            loading="lazy"
             src={author.image.url || defaultImg}
+            width={40}
+            height={40}
             className="size-9 cursor-pointer rounded-full border object-cover"
           />
           <div className="grid">
@@ -60,9 +63,9 @@ export function Postv2({
         <div className="mt-2 w-full">
           <Link
             to={`/post/${_id}`}
-            className={`md:text- line-clamp-3 w-full text-xl font-bold text-neutral-900 hover:text-blue-600 hover:underline dark:text-neutral-100 sm:line-clamp-2`}
+            className={`md:text- line-clamp-3 w-full text-2xl font-bold text-neutral-900 hover:text-blue-600 hover:underline dark:text-neutral-100 sm:line-clamp-2`}
           >
-            <h2 className="break-words">{title}</h2>
+            <h3 className="break-words">{title}</h3>
           </Link>
 
           {!!tags?.length && (
@@ -82,7 +85,7 @@ export function Postv2({
 
           {/* User Interactions */}
 
-          <div className="-ml-2 mt-2.5 flex w-full gap-1">
+          <div className="mt-2.5 flex w-full -translate-x-2 gap-1">
             <LikeButton
               commentOrPostId={_id}
               target="post"

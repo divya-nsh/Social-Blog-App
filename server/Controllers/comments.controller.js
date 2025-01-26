@@ -27,7 +27,7 @@ export const createComment = tryCatch(async (req, res) => {
       comment.postAuthor + "" === comment.author._id + "",
   };
 
-  res.status(201).json({ message: "Comment created successfully", results });
+  res.status(201).json({ results });
 });
 
 export const deleteComment = tryCatch(async (req, res) => {
@@ -44,7 +44,7 @@ export const deleteComment = tryCatch(async (req, res) => {
     console.log(`Failed to remove the likes of comment ${commentId}`);
   });
 
-  res.json({ message: "OK" });
+  res.json({ message: "Comment Deleted" });
 });
 
 export const updateComment = tryCatch(async (req, res) => {
@@ -88,6 +88,6 @@ export const getComment = tryCatch(async (req, res) => {
     { $limit: 1 },
     ...commentsAggBaseStage,
   ]);
-  if (!comment) throwError("Comment with given id not exits", 400);
-  res.status(200).json({ results: comment });
+  if (!comment[0]) throwError("Comment with given id not exits", 400);
+  res.status(200).json({ comment: comment[0] });
 });

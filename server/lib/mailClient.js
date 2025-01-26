@@ -32,7 +32,7 @@ export async function mailResetPasswordToken(email, token, username) {
         You can reset your account password by clicking link below. If you did
         not make this request please ignore this email.
       </p>
-      <a style="font-size:18px" href="http://localhost:5173/reset-password?token=${token}">
+      <a style="font-size:18px" href="${process.env.FRONTEND_URL}/reset-password?token=${token}">
         Reset Password
       </a>
       <p style="color: #3d3d3d;">Valid for 15 minutes</p>

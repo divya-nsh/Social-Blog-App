@@ -6,6 +6,7 @@ import { login as loginApi } from "@/Apis/userApis";
 import Alert from "@/components/Alert";
 import { FormInput } from "@/components/Input";
 import Button from "@/components/ButtonV2";
+import GoogleLoginbtn from "./GoogleLoginbtn";
 
 type Data = {
   email: string;
@@ -13,8 +14,8 @@ type Data = {
 };
 
 const intialData = {
-  email: "divyanshsoni279@gmail.com",
-  password: "1234567890",
+  email: "",
+  password: "",
 };
 
 export default function LoginV2() {
@@ -45,16 +46,19 @@ export default function LoginV2() {
 
   return (
     <div className="blue-spots-bg-img dark flex min-h-screen items-center justify-center text-white">
-      <div className="min-h-screen w-full gap-4 rounded-lg bg-neutral-800 p-8 px-4 pt-10 shadow-md sm:min-h-max sm:max-w-[450px] sm:px-8 sm:pt-8">
+      <div className="w-[450px] gap-4 rounded-lg bg-neutral-800 px-6 py-10 shadow-md sm:p-10">
         <form onSubmit={handleSubmit} className="grid gap-4">
           <div className="-mt-2 mb-1 flex flex-col items-center gap-3">
-            <h1 className="-ml-2 flex items-center gap-2 text-center text-2xl font-bold text-white">
+            <Link
+              to="/"
+              className="-ml-2 flex items-center gap-2 text-center text-2xl font-bold text-white"
+            >
               <img src="/logo.svg" className="size-8" width={8} height={8} />
               Story Nest
-            </h1>
-            <p className="text-center text-lg font-medium text-neutral-200">
+            </Link>
+            <h1 className="text-center text-xl font-medium text-neutral-200">
               Login to your account
-            </p>
+            </h1>
           </div>
           <Alert type="error" message={error?.message} />
           <FormInput
@@ -89,6 +93,8 @@ export default function LoginV2() {
             Login
           </Button>
         </form>
+
+        <GoogleLoginbtn />
 
         <div className="mt-6 text-center text-sm text-neutral-200">
           Don&apos;t have an account?

@@ -12,6 +12,7 @@ import { useSavePostMut } from "@/hooks/mutationHooks";
 import { useScrollToTop } from "@/hooks/useScroll";
 import FetchFail from "@/components/FetchFail";
 import Button from "@/components/ButtonV2";
+import { SpinnerGap } from "@phosphor-icons/react";
 
 export default function EditCreatePost() {
   const { postId } = useParams();
@@ -133,7 +134,7 @@ function EditCreatePostInner() {
             <Button
               onClick={() => fileInputRef.current?.click()}
               variants="outlined"
-              className="border-slate-300 py-1.5 text-sm"
+              className="py-1.5 text-sm"
             >
               {formData.coverImgUrl ? "Change " : "Add cover image"}
             </Button>
@@ -192,7 +193,10 @@ function EditCreatePostInner() {
 
         <Button type="submit" className="mt-4 px-6 py-2.5">
           {saveMut.isPending ? (
-            "Saving..."
+            <div className="flex items-center justify-center gap-2">
+              Saving...{" "}
+              <SpinnerGap size={27} weight="bold" className="animate-spin" />
+            </div>
           ) : postId ? (
             <>Update</>
           ) : (
@@ -204,10 +208,10 @@ function EditCreatePostInner() {
       {/* Top loader */}
       {saveMut.isPending && (
         <div
-          className={`fixed left-0 top-12 z-50 h-1 rounded-r-lg bg-green-400 transition-all`}
+          className={`fixed left-0 top-12 z-50 h-1 rounded-r-lg bg-green-500 transition-all`}
           style={{
             width: saveMut.uploadProgress + "%",
-            transitionDuration: saveMut.uploadProgress >= 100 ? "0.3s" : "2s",
+            transitionDuration: saveMut.uploadProgress >= 100 ? "0.3s" : "5s",
           }}
         />
       )}
