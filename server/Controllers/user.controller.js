@@ -225,7 +225,3 @@ export const authWithGoogle = tryCatch(async (req, res) => {
     authToken: createSessionToken(user),
   });
 });
-
-//https://lh3.googleusercontent.com/a/AEdFTp5bQzc9yB1ZM33KZzrbBgleVHKnzSPLBEsZ7GHZGg=s96-c
-//https://lh3.googleusercontent.com/a/ACg8ocLszMFY959CFh3BXInbMHqJtBgwZZrBx89aVg12u5d-P4ichD_H=s96-c
-//https://lh3.googleusercontent.com/a/ACg8ocLszMFY959CFh3BXInbMHqJtBgwZZrBx89aVg12u5d-P4ichD_H=s96-c
