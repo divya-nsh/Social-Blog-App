@@ -267,11 +267,11 @@ export default function NavBar() {
         ) : (
           <div className="flex w-full gap-3">
             <button
+              className="hover:opacity-80"
               onClick={() => setSearching(false)}
               title="back"
-              className="text-neutral-800"
             >
-              <ArrowLeft size={22} weight="bold" />
+              <ArrowLeft size={24} />
             </button>
             <form
               onSubmit={handleSearch}
