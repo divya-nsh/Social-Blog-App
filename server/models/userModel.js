@@ -29,6 +29,16 @@ const ImageSchema = new Schema(
   { _id: false, minimize: false }
 );
 
+export const allowedSocialLinks = new Set([
+  "website",
+  "facebook",
+  "linkedin",
+  "twitter",
+  "instagram",
+  "youtube",
+  "github",
+]);
+
 const userSchema = new Schema(
   {
     fullName: {
@@ -73,51 +83,33 @@ const userSchema = new Schema(
     bio: { type: String, trim: true, maxlength: 200, default: "" },
     isVerified: Boolean,
     socialLinks: {
-      type: {
-        website: {
-          type: String,
-          maxLength: 100,
-          trim: true,
-          validate: [isURL, "Invalid Website Link"],
-        },
-        facebook: {
-          type: String,
-          maxLength: 100,
-          trim: true,
-          validate: [isURL, "Invalid facebook Link"],
-        },
-        linkedin: {
-          type: String,
-          maxLength: 100,
-          trim: true,
-          validate: [isURL, "Invalid linkedin Link"],
-        },
-        twitter: {
-          type: String,
-          maxLength: 100,
-          trim: true,
-          validate: [isURL, "Invalid twitter Link"],
-        },
-        instagram: {
-          type: String,
-          maxLength: 100,
-          trim: true,
-          validate: [isURL, "Invalid instagram Link"],
-        },
-        youtube: {
-          type: String,
-          maxLength: 100,
-          trim: true,
-          validate: [isURL, "Invalid youtube Link"],
-        },
-        github: {
-          type: String,
-          maxLength: 100,
-          trim: true,
-          validate: [isURL, "Invalid github Link"],
-        },
+      type: Map,
+      of: {
+        type: String,
+        validate: [
+          (url) =>
+            url === "" ||
+            isURL(url, {
+              protocols: ["http", "https"],
+              require_protocol: true,
+            }),
+          "Invalid URL",
+        ],
+        maxLength: [150, "URL must be less than or equal to 150 characters"],
       },
-      _id: false,
+
+      validate: [
+        {
+          validator: (map) => {
+            for (let key of map.keys()) {
+              if (!allowedSocialLinks.has(key)) return false;
+            }
+            return true;
+          },
+
+          message: "Invalid keys",
+        },
+      ],
     },
   },
   {

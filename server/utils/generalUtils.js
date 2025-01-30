@@ -13,39 +13,42 @@ export function createSlug(text, suffix) {
   return slug;
 }
 
+export const isObj = (val) => {
+  return typeof val === "object" && val !== null && !Array.isArray(val);
+};
+
 /**
  * @type {(toObj:{[key:string]:any},fromObj:{[key:string]:any},allowedFields?:string[],removeValWith?:Array<string|null|undefined|{}|[]>)=>object}
  */
 export function checkAssign(
   toObj,
   fromObj,
-  allowedFields = [],
-  removeValWith = [undefined]
+  allowedKeys = [],
+  notAllow = [undefined]
 ) {
+  if (!isObj(fromObj) || !isObj(toObj)) return toObj;
   let isArrAndEmpty = (val) => Array.isArray(val) && !val.length;
   let isObjAndEmpty = (val) => {
-    if (typeof val !== "object" || val === null || Array.isArray(val)) {
-      return false;
-    }
-    return Object.keys(val).length === 0;
+    return isObj(val) && Object.keys(val).length === 0;
   };
-  let isEmptyArrNotAllowed = removeValWith.some(isArrAndEmpty);
-  let isEmptyObjNotAllowed = removeValWith.some(isObjAndEmpty);
+  let isEmptyArrNotAllowed = notAllow.some(isArrAndEmpty);
+  let isEmptyObjNotAllowed = notAllow.some(isObjAndEmpty);
 
-  // Function to filter values based on allowed fields and removal criteria
-  const filterValue = ([key, val]) => {
-    if (allowedFields.includes(key)) {
-      if (isArrAndEmpty(val) && isEmptyArrNotAllowed) return false;
-      if (isObjAndEmpty(val) && isEmptyObjNotAllowed) return false;
-      if (removeValWith.includes(val)) return false;
-      return true;
+  for (const key in fromObj) {
+    let value = fromObj[key];
+    // Skip keys not in allowedKeys (if allowedKeys is provided)
+    if (allowedKeys.length && !allowedKeys.includes(key)) continue;
+    // Skip not allowed values
+    if (
+      notAllow.includes(value) ||
+      (isEmptyArrNotAllowed && isArrAndEmpty(value)) ||
+      (isEmptyObjNotAllowed && isObjAndEmpty(value))
+    ) {
+      continue;
     }
-    return false;
-  };
 
-  Object.entries(fromObj)
-    .filter(filterValue)
-    .forEach(([key, value]) => (toObj[key] = value));
+    toObj[key] = value;
+  }
   return toObj;
 }
 

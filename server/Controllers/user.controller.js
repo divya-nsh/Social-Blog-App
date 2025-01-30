@@ -12,6 +12,7 @@ import { paginateHelper } from "../utils/queryHelpers.js";
 import {
   checkAssign,
   generateAvatar,
+  isObj,
   isValidEmail,
 } from "../utils/generalUtils.js";
 import { removeImg } from "../lib/cloudinary-service.js";
@@ -21,13 +22,22 @@ import {
 } from "../lib/mailClient.js";
 import { OAuth2Client } from "google-auth-library";
 
+/**
+ *
+ * @param {import("mongoose").Document} user
+ * @param {boolean} removeEmail
+ * @param {boolean} isMe
+ * @returns {object}
+ */
 function flatternUser(user, removeEmail = false, isMe) {
   delete user.password;
   delete user.__v;
   delete user.pv;
   removeEmail && delete user.email;
   let res = {
-    ...(user.toObject ? user.toObject() : user),
+    ...(user.toObject
+      ? user.toObject({ flattenObjectIds: true, flattenMaps: true })
+      : user),
     imageUrl: user.image.url,
     imageId: user.image.publicId,
   };
@@ -164,13 +174,18 @@ export const updateProfile = tryCatch(async (req, res) => {
   let user = await User.findById(req.userId).select("-password -pv");
   if (!user) throw "something is wrong";
   let oldImgId = user.image?.publicId;
-  checkAssign(user, req.body, [
-    "fullName",
-    "bio",
-    "socialLinks",
-    "username",
-    "email",
-  ]);
+  const { socialLinks } = req.body;
+
+  checkAssign(user, req.body, ["fullName", "bio", "username", "email"]);
+
+  if (isObj(socialLinks)) {
+    Object.keys(socialLinks).forEach((key) => {
+      if (socialLinks[key] == null || socialLinks[key] === "") {
+        delete socialLinks[key];
+      }
+    });
+    user.socialLinks = socialLinks;
+  }
 
   if (req.file) {
     user.image = { url: req.file.path, publicId: req.file.filename };
