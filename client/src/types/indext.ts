@@ -43,6 +43,7 @@ export interface SocialLinksI {
   website?: string;
   youtube?: string;
   facebook?: string;
+  linkedin?: string;
 }
 
 export type IEditUser = Partial<

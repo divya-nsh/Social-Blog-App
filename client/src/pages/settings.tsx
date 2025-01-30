@@ -1,7 +1,9 @@
 import {
   FacebookLogo,
+  GlobeSimple,
   InstagramLogo,
-  TwitterLogo,
+  LinkedinLogo,
+  XLogo,
 } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import { useUserContext } from "@/hooks/useUserCtx";
@@ -12,7 +14,6 @@ import { updateProfile } from "@/Apis/userApis";
 import toast from "react-hot-toast";
 import UpdateProfileImg from "@/components/UpdateProfileImg";
 import { ApiError, IEditUser } from "../types/indext";
-import { LinkSimple } from "@phosphor-icons/react";
 import { TextArea } from "@/components/TextArea";
 import { FormInput, InputWithIcon } from "@/components/Input";
 import Button from "@/components/ButtonV2";
@@ -88,6 +89,7 @@ export default function AccountSettings() {
             }}
             required
             maxLength={30}
+            minLength={3}
           />
           <FormInput
             label="Email"
@@ -95,7 +97,7 @@ export default function AccountSettings() {
             value={formData.email}
             onChange={handleChange}
             required
-            maxLength={40}
+            maxLength={64}
             type="email"
           />
           <TextArea
@@ -115,13 +117,13 @@ export default function AccountSettings() {
           </div>
 
           <InputWithIcon
-            label="instagram"
-            title="Your Website Link"
+            label="Personal Website"
+            title="Your Personal Website Link"
             name="socialLinks.website"
-            value={formData.socialLinks.website}
-            placeholder="Website link (http://...)"
+            value={formData.socialLinks.website || ""}
+            placeholder="Personal Website link"
             onChange={handleChange}
-            icon={<LinkSimple size={25} />}
+            icon={<GlobeSimple size={25} />}
             maxLength={100}
             type="url"
           />
@@ -129,10 +131,10 @@ export default function AccountSettings() {
             label="instagram"
             title="Your Instagram Link"
             name="socialLinks.instagram"
-            value={formData.socialLinks.instagram}
-            placeholder="Instagram link (http://...)"
+            value={formData.socialLinks.instagram || ""}
+            placeholder="Instagram Profile link"
             onChange={handleChange}
-            icon={<InstagramLogo size={25} weight="fill" />}
+            icon={<InstagramLogo size={25} />}
             maxLength={100}
             type="url"
           />
@@ -140,10 +142,10 @@ export default function AccountSettings() {
             label="Facebook"
             title="Your facebook Link"
             name="socialLinks.facebook"
-            value={formData.socialLinks.facebook}
-            placeholder="Facebook link (http://...)"
+            value={formData.socialLinks.facebook || ""}
+            placeholder="Facebook Profile link"
             onChange={handleChange}
-            icon={<FacebookLogo size={25} weight="fill" />}
+            icon={<FacebookLogo size={25} />}
             maxLength={100}
             type="url"
           />
@@ -151,10 +153,22 @@ export default function AccountSettings() {
             title="Your Twitter Link"
             label="twitter"
             name="socialLinks.twitter"
-            value={formData.socialLinks.twitter}
-            placeholder="Twitter link (http://...)"
+            value={formData.socialLinks.twitter || ""}
+            placeholder="Twitter Profile link"
             onChange={handleChange}
-            icon={<TwitterLogo size={25} weight="fill" />}
+            icon={<XLogo size={25} />}
+            maxLength={100}
+            type="url"
+          />
+
+          <InputWithIcon
+            title="Your Linkedin Link"
+            label="twitter"
+            name="socialLinks.linkedin"
+            value={formData.socialLinks.linkedin || ""}
+            placeholder="Linkedin Profile link"
+            onChange={handleChange}
+            icon={<LinkedinLogo size={25} />}
             maxLength={100}
             type="url"
           />

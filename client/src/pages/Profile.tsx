@@ -110,7 +110,10 @@ function InnerProfile({ username }: { username: string }) {
             </p>
           )}
 
-          <SocialLinks links={user.socialLinks || {}} className="-ml-2" />
+          <SocialLinks
+            links={(user.socialLinks as Record<string, string>) || {}}
+            className="-ml-2"
+          />
         </div>
         {/* <div className="flex gap-10 rounded-b-xl border-t px-2 text-[0.9rem] text-red-400 dark:border-neutral-700 sm:px-4">
           <span
