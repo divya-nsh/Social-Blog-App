@@ -5,8 +5,8 @@ import bcrypt from "bcrypt";
 
 const usernameValidator = [
   {
-    validator: (val) => val.length >= 2 && val.length <= 30,
-    message: "Username must be between 2 and 30 characters",
+    validator: (val) => val.length >= 3 && val.length <= 30,
+    message: "Username must be between 3 and 30 characters",
   },
   {
     validator: (val) => /^[a-zA-Z0-9_]+$/.test(val),
@@ -54,13 +54,8 @@ const userSchema = new Schema(
       unique: true,
       trim: true,
       validate: usernameValidator,
-      maxlength: 30,
       default: function () {
-        // 10 + 8 = 18  (babluedonirdjdfddd)(babluedoni.rdjdfddd)
-        return (
-          this.fullName?.split(" ")[0].toLocaleLowerCase().slice(0, 10) +
-          Date.now().toString(36)
-        );
+        return generateUsername(this.fullName);
       },
     },
     email: {
@@ -137,3 +132,16 @@ userSchema.pre("save", async function (next) {
 });
 
 export const User = model("User", userSchema);
+
+function generateUsername(preffix) {
+  const baseName = preffix
+    ?.split(" ")[0]
+    .toLowerCase()
+    .replace(/[^a-z0-9_]/g, "") // Remove invalid characters
+    .slice(0, 10); // Limit to 10 chars
+
+  // Generate a time-based suffix using Date.now() converted to base36
+  const timeSuffix = Date.now().toString(36); // 8 chars
+
+  return (baseName + timeSuffix).slice(0, 30); // Ensure max 30 chars
+}
