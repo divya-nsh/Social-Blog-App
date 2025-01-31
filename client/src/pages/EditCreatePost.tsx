@@ -63,7 +63,7 @@ function EditCreatePostInner() {
     if (file.size > 1024 * 1024 * 5) {
       return toast.error("File size must be less than 5MB");
     } else if (!file.type.startsWith("image/")) {
-      return toast.error("File must be an image");
+      return toast.error("File must be a image");
     }
     setFormData((p) => ({
       ...p,
@@ -77,8 +77,7 @@ function EditCreatePostInner() {
     const titleL = formData.title?.length || 0;
     if ((formData.content?.length || 0) < 50) {
       toast.error("Content must contain at least 50 characters.");
-    }
-    if (titleL < 10 || titleL > 150) {
+    } else if (titleL < 10 || titleL > 150) {
       toast.error("Title must contain between 10 and 150 characters.");
     } else {
       saveMut.mutate(formData);
@@ -194,7 +193,7 @@ function EditCreatePostInner() {
         <Button type="submit" className="mt-4 px-6 py-2.5">
           {saveMut.isPending ? (
             <div className="flex items-center justify-center gap-2">
-              Saving...{" "}
+              Saving...
               <SpinnerGap size={27} weight="bold" className="animate-spin" />
             </div>
           ) : postId ? (
