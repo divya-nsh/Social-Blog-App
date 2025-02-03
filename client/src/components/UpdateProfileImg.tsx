@@ -7,11 +7,13 @@ import { twMerge } from "tailwind-merge";
 import { Upload } from "@phosphor-icons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PLACEHOLDER_USER_IMG } from "@/lib/utils";
+import ImageCropperModal from "./ImageCropperModal";
 
 export default function UpdateProfileImg() {
   const { user, setUser } = useUserContext();
   const queryClient = useQueryClient();
   const [img, setImg] = useState(user?.image.url || "");
+  const [selectedImg, setSelectedImg] = useState<string | null>(null);
   const mutKey = ["profile-img-update"];
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -42,11 +44,14 @@ export default function UpdateProfileImg() {
       toast.error("Image size must be less than 5MB");
       return;
     }
-    const formData = new FormData();
-    formData.append("image", file);
-    mutate(formData);
-    e.target.value = "";
+    setSelectedImg(URL.createObjectURL(file));
   };
+
+  useEffect(() => {
+    if (selectedImg) {
+      return () => URL.revokeObjectURL(selectedImg);
+    }
+  }, [selectedImg]);
 
   const isPending = queryClient.isMutating({ mutationKey: mutKey }) > 0;
 
@@ -92,6 +97,32 @@ export default function UpdateProfileImg() {
         <div className="absolute inset-0 grid place-items-center">
           <SpinnerGap className="animate-spin" size={50} color="white" />
         </div>
+      )}
+
+      {selectedImg && (
+        <ImageCropperModal
+          onSave={(canva) => {
+            canva.toBlob(
+              (blob) => {
+                if (!blob) return;
+                console.log(blob.size);
+                const formData = new FormData();
+                formData.append("image", blob);
+                mutate(formData);
+                inputRef.current!.value = "";
+                setSelectedImg(null);
+              },
+              "image/jpeg",
+              0.8,
+            );
+          }}
+          aspect={1}
+          img={selectedImg}
+          cropShape="round"
+          onModalClose={() => {
+            setSelectedImg(null);
+          }}
+        />
       )}
     </div>
   );
