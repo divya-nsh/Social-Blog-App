@@ -8,7 +8,6 @@ export const userImgUploader = multer({
       height: 300,
       format: "jpg",
       crop: "fill",
-      gravity: "face",
     },
     folder: "user-avatar",
     resource_type: "image",
