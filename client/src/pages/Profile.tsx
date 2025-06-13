@@ -13,6 +13,7 @@ import { Calendar, SpinnerGap } from "@phosphor-icons/react";
 import { ImageModal } from "@/components/ImageModel";
 import { useScrollToTop } from "@/hooks/useScroll";
 import FetchFail from "@/components/FetchFail";
+import format from "date-fns/format";
 
 export function Profile() {
   const { username } = useParams();
@@ -88,7 +89,7 @@ function InnerProfile({ username }: { username: string }) {
               {user.total_posts} posts
             </p>
             <p className="flex items-center gap-2 text-sm text-neutral-950 dark:text-neutral-200">
-              Joined on july 5
+              Joined on {format(new Date(user.createdAt), "dd MMM yyyy")}
               <Calendar size={19} color="gray" weight="fill" />
             </p>
           </div>
